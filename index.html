@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黃大恩 D.-E. Huang | 聯網終端</title>
+    <!-- 引入通用英數字體 Inter 與圖標 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #060409;
+            --panel-glass: rgba(13, 10, 23, 0.75);
+            --panel-glass-blur: blur(20px);
+            --cyan-glow: #00f0ff;
+            --gold-accent: #ffcb6b;
+            --pink-accent: #ff4a9a;
+            --text-main: #ffffff;
+            --text-muted: #abb2bf;
+            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
+            
+            --muted-lock: #625e70;
+            --muted-lock-bg: rgba(98, 94, 112, 0.08);
+            --muted-lock-border: rgba(98, 94, 112, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow: hidden; 
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* 滿版動態 Canvas 背景 */
+        #space-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+            background: radial-gradient(circle at center, #110b24 0%, #060409 100%);
+        }
+
+        /* 科技網格線覆蓋疊加 */
+        .tech-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.08; pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* ==================== [ 開頭加載動畫 ] ==================== */
+        #game-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #05040a; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .loader-ring {
+            width: 80px; height: 80px; border: 2px solid rgba(0, 240, 255, 0.1);
+            border-top: 2px solid var(--cyan-glow); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+        .loader-text {
+            font-size: 0.85rem; letter-spacing: 4px; color: var(--cyan-glow);
+            font-weight: bold; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+        .loader-progress { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 2px; overflow: hidden; }
+        .loader-bar { width: 0%; height: 100%; background: var(--cyan-glow); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ==================== [ 網頁主佈局 ] ==================== */
+        .wrapper { display: flex; height: 100vh; width: 100vw; opacity: 0; animation: initReveal 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        @keyframes initReveal { to { opacity: 1; } }
+
+        /* 側邊欄 */
+        sidebar {
+            width: 260px; background: var(--panel-glass); backdrop-filter: var(--panel-glass-blur);
+            border-right: 1px solid rgba(255, 255, 255, 0.06); display: flex; flex-direction: column;
+            padding: 40px 0; z-index: 10; justify-content: space-between;
+        }
+        .sidebar-top { padding: 0 30px; }
+        .site-title { font-size: 1.4rem; font-weight: 900; letter-spacing: 1px; color: #fff; margin-bottom: 40px; }
+        .site-title span { color: var(--cyan-glow); }
+        .nav-links { display: flex; flex-direction: column; gap: 10px; }
+        .nav-btn {
+            padding: 14px 30px; cursor: pointer; font-size: 0.95rem; font-weight: 700;
+            color: var(--text-muted); transition: all 0.3s; display: flex; align-items: center; gap: 15px; border-left: 4px solid transparent;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            color: #fff; background: linear-gradient(90deg, rgba(0, 240, 255, 0.1), transparent);
+            border-left-color: var(--cyan-glow); text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        /* 主內容區 */
+        main { flex-grow: 1; height: 100vh; overflow-y: auto; padding: 50px; position: relative; scroll-behavior: smooth; }
+
+        /* 面板與卡片 */
+        .page-view { display: none; max-width: 1000px; margin: 0 auto; }
+        .page-view.active { display: block; animation: pageEnter 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        @keyframes pageEnter { from { opacity: 0; transform: translateY(15px); filter: blur(4px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+
+        .section-panel {
+            background: var(--panel-glass); backdrop-filter: var(--panel-glass-blur);
+            border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px;
+            padding: 35px; margin-bottom: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .panel-heading {
+            font-size: 1.4rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 25px;
+            display: flex; align-items: center; gap: 12px; color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 12px;
+        }
+        .panel-heading span { font-size: 0.75rem; color: var(--gold-accent); letter-spacing: 2px; margin-left: auto; }
+
+        .sub-panel-title {
+            font-size: 0.95rem; font-weight: 700; color: var(--gold-accent);
+            letter-spacing: 1.5px; margin: 25px 0 12px 0; display: flex; align-items: center; gap: 8px;
+        }
+
+        .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+        .interactive-card {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px 20px; border-radius: 8px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.25s ease; font-size: 0.95rem; font-weight: 500;
+        }
+        .interactive-card:hover {
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.08), transparent);
+            border-color: var(--cyan-glow); transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 240, 255, 0.1);
+        }
+        .interactive-card i { color: var(--cyan-glow); font-size: 0.9rem; opacity: 0.7; }
+
+        /* 低調優雅的高級灰階「暫無資料」卡片樣式 */
+        .interactive-card.locked-card {
+            cursor: not-allowed !important;
+            border-color: var(--muted-lock-border);
+            background: var(--muted-lock-bg);
+        }
+        .interactive-card.locked-card:hover {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent) !important;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.05) !important;
+            transform: translateX(0) !important;
+        }
+        .interactive-card.locked-card span { color: var(--text-muted); font-weight: 500; }
+        .interactive-card.locked-card i { color: var(--muted-lock); opacity: 0.6; }
+
+        /* 專題排版 */
+        .project-box { display: grid; grid-template-columns: 1.2fr 1fr; gap: 35px; align-items: center; }
+        .project-thumb { width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .btn-game {
+            display: inline-flex; align-items: center; gap: 10px; background: #fff; color: #000;
+            padding: 12px 28px; border-radius: 4px; font-weight: 700; text-decoration: none;
+            font-size: 0.9rem; letter-spacing: 1px; transition: all 0.3s; margin-top: 20px; margin-right: 15px;
+        }
+        .btn-game:hover { background: var(--cyan-glow); box-shadow: 0 0 15px var(--cyan-glow); transform: translateY(-2px); }
+        .btn-game.secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-game.secondary:hover { border-color: var(--pink-accent); color: var(--pink-accent); box-shadow: 0 0 15px var(--pink-accent); }
+
+        /* 相簿與跑馬燈共用網格 */
+        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .album-card {
+            position: relative; overflow: hidden; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);
+            aspect-ratio: 4/3; cursor: zoom-in; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .album-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .album-card:hover img { transform: scale(1.08); }
+        .album-mask {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px 15px;
+            background: linear-gradient(to top, rgba(6,4,9,0.95), transparent); font-size: 0.9rem; font-weight: 700;
+        }
+
+        /* ==================== [ 遊戲風無限循環跑馬燈 CSS ] ==================== */
+        .marquee-container {
+            width: 100%; overflow: hidden; position: relative; padding: 10px 0;
+            background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);
+        }
+        .marquee-track {
+            display: flex; width: max-content; gap: 20px;
+            animation: marqueeScroll 25s linear infinite;
+        }
+        .marquee-container:hover .marquee-track { animation-play-state: paused; }
+        
+        .marquee-item {
+            width: 240px; aspect-ratio: 4/3; border-radius: 8px; overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08); cursor: zoom-in;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4); transition: border-color 0.3s;
+        }
+        .marquee-item:hover { border-color: var(--cyan-glow); }
+        .marquee-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-50% - 10px)); }
+        }
+
+        /* 燈箱系統 */
+        .lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 3, 8, 0.9); backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; z-index: 10000; transition: opacity 0.3s;
+        }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+        
+        .lightbox-wrapper { 
+            border: 1px solid rgba(0, 240, 255, 0.2); background: #100e1a; padding: 6px; border-radius: 12px; 
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.2); position: relative;
+            width: fit-content; height: fit-content;
+            max-width: 85%; max-height: 85%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        #lightbox-media-box { max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
+        #lightbox-media-box img { max-width: 100%; max-height: 78vh; border-radius: 8px; display: block; object-fit: contain; }
+        #lightbox-media-box iframe { width: 75vw; height: 78vh; border: none; border-radius: 8px; background: #fff; }
+        .lightbox-close { position: absolute; top: -45px; right: 0; background: none; border: none; color: var(--cyan-glow); font-size: 2.2rem; cursor: pointer; }
+
+        .pill { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 6px 14px; border-radius: 4px; font-size: 0.88rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <!-- 頂階動態背景與網格 -->
+    <canvas id="space-canvas"></canvas>
+    <div class="tech-overlay"></div>
+
+    <!-- 加載動畫 -->
+    <div id="game-loader">
+        <div class="loader-ring"></div>
+        <div class="loader-text" id="loader-percent">LOADING DATA // 0%</div>
+        <div class="loader-progress"><div class="loader-bar" id="loader-bar"></div></div>
+    </div>
+
+    <!-- 主要佈局 -->
+    <div class="wrapper">
+        <sidebar>
+            <div class="sidebar-top">
+                <div class="site-title"><span>TERMINAL</span></div>
+                <div class="nav-links">
+                    <div class="nav-btn active" data-target="home"><i class="fa-solid fa-house"></i>系統主頁</div>
+                    <div class="nav-btn" data-target="certs"><i class="fa-solid fa-id-card"></i>專業憑證</div>
+                    <div class="nav-btn" data-target="comps"><i class="fa-solid fa-trophy"></i>競賽紀錄</div>
+                    <div class="nav-btn" data-target="project"><i class="fa-solid fa-cubes"></i>畢業專題</div>
+                    <div class="nav-btn" data-target="papers"><i class="fa-solid fa-scroll"></i>學術論文</div>
+                    <div class="nav-btn" data-target="hobbies"><i class="fa-solid fa-compass"></i>實地採集</div>
+                </div>
+            </div>
+            <div style="padding: 0 30px; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px;">
+                SYSTEM VERSION 2.6.0<br>STATUS: ONLINE
+            </div>
+        </sidebar>
+
+        <main>
+            <!-- [分頁一：系統主頁] -->
+            <div id="page-home" class="page-view active">
+                <div class="section-panel" style="padding: 45px; margin-bottom: 25px;">
+                    <div style="display: flex; align-items: center; gap: 35px;">
+                        <img src="./assets/avatar.png" style="width: 120px; height: 120px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.15);" onerror="this.src='https://via.placeholder.com/120'">
+                        <div>
+                            <h2 style="font-size: 2.4rem; font-weight: 900;">黃大恩 <span style="font-size: 0.85rem; background: var(--pink-accent); padding: 3px 8px; border-radius: 4px; margin-left: 10px; vertical-align: middle;">UID: 3B241085</span></h2>
+                            <p style="color: var(--cyan-glow); font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; margin-top: 6px;">WELCOME, BON VOYAGE.</p>
+                            <p style="color: var(--text-muted); margin-top: 15px; font-size: 0.98rem; max-width: 750px;">
+                                專注於人工智慧、機器學習與時序數據分析。擅長將演算法與硬體架構融合，打造具備前瞻性的物聯網智慧疲勞觀測與山域救援終端系統。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1.2fr 1.2fr; gap: 25px; margin-bottom: 25px;">
+                    <div class="section-panel" style="margin-bottom: 0;">
+                        <div class="panel-heading"><i class="fa-solid fa-square-poll-horizontal"></i> 專業 <span>[MATRICES]</span></div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <span class="pill">人工智慧 AI</span><span class="pill">領域自適應</span><span class="pill">機器學習 ML</span>
+                            <span class="pill">時序數據分析</span><span class="pill">AI 影像辨識</span><span class="pill">演算法</span>
+                            <span class="pill">資料結構</span><span class="pill">Linux / Docker</span>
+                        </div>
+                    </div>
+                    <div class="section-panel" style="margin-bottom: 0;">
+                        <div class="panel-heading"><i class="fa-solid fa-star"></i> 榮譽 <span>[LEGEND]</span></div>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div class="interactive-card" data-img="./certificates/youth_2025.png">
+                                <span>114 (2025) 學年度優秀青年</span> <i class="fa-solid fa-eye"></i>
+                            </div>
+                            <div class="interactive-card" data-img="./certificates/scholarship.png">
+                                <span>青永勤學愛校學生獎助學金</span> <i class="fa-solid fa-eye"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 首頁生活/活動照片跑馬燈 -->
+                <div class="section-panel" style="padding: 20px;">
+                    <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
+                        FIELD_ACTIVITY_LOG // 活動紀錄 (點擊檢視大圖)
+                    </div>
+                    <div class="marquee-container">
+                        <div class="marquee-track" id="home-marquee-track">
+                            <!-- 由 JavaScript 動態生成注入 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [分頁二：專業憑證] -->
+            <div id="page-certs" class="page-view">
+                <div class="section-panel" style="margin-bottom: 25px;">
+                    <div class="panel-heading"><i class="fa-solid fa-id-card"></i> 數據集成憑證 <span>[CERTIFICATES]</span></div>
+                    
+                    <div class="sub-panel-title"><i class="fa-solid fa-graduation-cap"></i> 大學憑證 [UNIVERSITY_LEVEL]</div>
+                    <div class="list-container" style="margin-bottom: 25px;">
+                        <div class="interactive-card" data-img="./certificates/cpe.pdf"><span>CPE 4題 PR 94</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/ipas.jpg"><span>iPAS AI應用規劃師 中級</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/tqc.jpg"><span>TQC+ Python3 第二版</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/gemini_std.png"><span>Gemini Certified Student</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/gemini_fac.png"><span>Gemini Certified Faculty</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/jetson.png"><span>AI on Jetson Nano 結業</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/radio.jpg"><span>三等業餘無線電執照</span><i class="fa-solid fa-eye"></i></div>
+                    </div>
+
+                    <div class="sub-panel-title"><i class="fa-solid fa-school"></i> 高中憑證 [HIGH_SCHOOL_LEVEL]</div>
+                    <div class="list-container">
+                        <div class="interactive-card locked-card">
+                            <div><span>電腦軟體應用 乙級 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
+                            <i class="fa-solid fa-border-all"></i>
+                        </div>
+                        <div class="interactive-card locked-card">
+                            <div><span>APCS 專業檢定 3+3 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
+                            <i class="fa-solid fa-border-all"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 證照預覽跑馬燈 -->
+                <div class="section-panel" style="padding: 20px;">
+                    <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
+                        CREDENTIAL_PREVIEW_MATRIX // 憑證圖檔即時預覽 (點擊檢視大圖)
+                    </div>
+                    <div class="marquee-container">
+                        <div class="marquee-track">
+                            <div class="marquee-item" data-img="./certificates/ipas.jpg"><img src="./certificates/ipas.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=iPAS'"></div>
+                            <div class="marquee-item" data-img="./certificates/tqc.jpg"><img src="./certificates/tqc.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=TQC%2B+Python'"></div>
+                            <div class="marquee-item" data-img="./certificates/gemini_std.png"><img src="./certificates/gemini_std.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Student'"></div>
+                            <div class="marquee-item" data-img="./certificates/gemini_fac.png"><img src="./certificates/gemini_fac.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Faculty'"></div>
+                            <div class="marquee-item" data-img="./certificates/jetson.png"><img src="./certificates/jetson.png" onerror="this.src='https://via.placeholder.com/240x180?text=Jetson+Nano'"></div>
+                            
+                            <div class="marquee-item" data-img="./certificates/ipas.jpg"><img src="./certificates/ipas.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=iPAS'"></div>
+                            <div class="marquee-item" data-img="./certificates/tqc.jpg"><img src="./certificates/tqc.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=TQC%2B+Python'"></div>
+                            <div class="marquee-item" data-img="./certificates/gemini_std.png"><img src="./certificates/gemini_std.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Student'"></div>
+                            <div class="marquee-item" data-img="./certificates/gemini_fac.png"><img src="./certificates/gemini_fac.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Faculty'"></div>
+                            <div class="marquee-item" data-img="./certificates/jetson.png"><img src="./certificates/jetson.png" onerror="this.src='https://via.placeholder.com/240x180?text=Jetson+Nano'"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [分頁三：競賽紀錄] -->
+            <div id="page-comps" class="page-view">
+                <div class="section-panel" style="margin-bottom: 20px;">
+                    <div class="panel-heading"><i class="fa-solid fa-trophy"></i> 歷年競賽紀錄 <span>[RECORDS]</span></div>
+                    
+                    <div class="sub-panel-title"><i class="fa-solid fa-graduation-cap"></i> 大學紀錄 [UNIVERSITY_LEVEL]</div>
+                    <div class="list-container" style="grid-template-columns: 1fr; margin-bottom: 25px;">
+                        <div class="interactive-card" data-img="./certificates/race_2024.jpg"><span>2024 程速勁賽 全國第一名</span><i class="fa-solid fa-crown" style="color:var(--gold-accent);"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2024_prog.jpg"><span>113年 (2024) 全國程式力競賽 第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2026_prog.jpg"><span>115年 (2026) 全國程式力競賽 第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2025.png"><span>2025 金象盃 全國第三名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2023.jpg"><span>2023 金象盃 全國優勝</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/info_2023.jpg"><span>2024 資訊月中區個人組 優勝</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/smart_2024.jpg"><span>2024 全國智慧製造大數據分析競賽 入圍</span><i class="fa-solid fa-eye"></i></div>
+                    </div>
+
+                    <div class="sub-panel-title"><i class="fa-solid fa-school"></i> 高中紀錄 [HIGH_SCHOOL_LEVEL]</div>
+                    <div class="list-container" style="grid-template-columns: 1fr;">
+                        <div class="interactive-card" data-img="./certificates/high_skills_2022.jpg"><span>111年 (2022) 全國高級中等學校技藝競賽 程式設計 全國第18名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/high_info_2022.jpg"><span>111年 (2022) 資訊月中區團體組 第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card locked-card">
+                            <div><span>111年 (2022) 青年程式設計競賽 全國佳作 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
+                            <i class="fa-solid fa-border-all"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 競賽獎狀跑馬燈 -->
+                <div class="section-panel" style="padding: 20px;">
+                    <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
+                        HONOR_CERTIFICATE_MATRIX // 競賽實體獎狀成果 (點擊檢視大圖)
+                    </div>
+                    <div class="marquee-container">
+                        <div class="marquee-track">
+                            <div class="marquee-item" data-img="./certificates/race_2024.jpg"><img src="./certificates/race_2024.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2024'"></div>
+                            <div class="marquee-item" data-img="./certificates/race_2024_prog.jpg"><img src="./certificates/race_2024_prog.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Prog+2024'"></div>
+                            <div class="marquee-item" data-img="./certificates/race_2025.png"><img src="./certificates/race_2025.png" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2025'"></div>
+                            <div class="marquee-item" data-img="./certificates/race_2023.jpg"><img src="./certificates/race_2023.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2023'"></div>
+                            <div class="marquee-item" data-img="./certificates/info_2023.jpg"><img src="./certificates/info_2023.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Info+2023'"></div>
+                            
+                            <div class="marquee-item" data-img="./certificates/race_2024.jpg"><img src="./certificates/race_2024.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2024'"></div>
+                            <div class="marquee-item" data-img="./certificates/race_2024_prog.jpg"><img src="./certificates/race_2024_prog.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Prog+2024'"></div>
+                            <div class="marquee-item" data-img="./certificates/race_2025.png"><img src="./certificates/race_2025.png" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2025'"></div>
+                            <div class="marquee-item" data-img="./certificates/race_2023.jpg"><img src="./certificates/race_2023.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2023'"></div>
+                            <div class="marquee-item" data-img="./certificates/info_2023.jpg"><img src="./certificates/info_2023.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Info+2023'"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [分頁四：畢業專題] -->
+            <div id="page-project" class="page-view">
+                <div class="section-panel" style="margin-bottom: 20px;">
+                    <div class="panel-heading">
+                        <i class="fa-solid fa-cubes"></i> 大學畢業專題成果 <span>[GRADUATION_PROJECT]</span>
+                    </div>
+                    <div class="project-box" style="grid-template-columns: 1.1fr 0.9fr; gap: 30px; display: grid; align-items: start;">
+                        <div>
+                            <h3 style="font-size: 1.35rem; color: var(--cyan-glow); font-weight: 900;">
+                               智慧登山杖：結合 IMU 與 AI 疲勞監測的登山安全輔助系統
+                            </h3>
+                            <p style="color: var(--text-muted); margin-top: 12px; font-size: 0.92rem; line-height: 1.7; text-align: justify;">
+                                本專題實作完整的邊緣端機器學習與應急無線電偵測流程。研究涵蓋野外實地數據蒐集，建構逾 20 小時之真實高山步態時序資料庫；前處理階段導入去噪擴散機率模型（DDPM）執行高階數據增強，消弭樣本不平衡；藉由三軸加速度與三軸陀螺儀訊號進行時序特徵擷取。模型訓練階段採用輕量化門控循環單元（GRU）捕捉步態演變特徵，並於邊緣端推理架構整合 CORAL 演算法，實作無監督領域自適應校準，有效消弭跨使用者與地形差異之領域偏移。
+                            </p>
+                            
+                            <!-- 🆕 新增：2026 實務專題競賽第二名戰功卡片（特規灰階暫無資料風格） -->
+                            <div class="interactive-card locked-card" style="margin-top: 20px; width: 100%; max-width: 450px;">
+                                <div>
+                                    <span style="font-weight:700;">2026 實務專題競賽 第二名 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span>
+                                </div>
+                                <i class="fa-solid fa-border-all"></i>
+                            </div>
+
+                            <div style="margin-top: 15px;">
+                                <a href="https://canva.link/896a69o39vo41rr" target="_blank" class="btn-game" style="margin-top: 10px;">
+                                    <i class="fa-solid fa-file-powerpoint"></i> 線上簡報 (Canva)
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 18px; border-radius: 8px;">
+                            <div style="font-size: 0.75rem; color: var(--gold-accent); font-family: 'Inter'; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px;">
+                                DATA_ANALYSIS_MATRIX // SYSTEM_METRICS
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem;">
+                                <div>• 數據採樣率: <span style="color: var(--cyan-glow); font-weight: 700;">160 Hz</span></div>
+                                <div>• 窗口切片長: <span style="color: var(--cyan-glow); font-weight: 700;">960 據點</span></div>
+                                <div>• 基準分類率: <span style="color: var(--cyan-glow); font-weight: 700;">97.49%</span></div>
+                                <div>• 域自適應率: <span style="color: var(--cyan-glow); font-weight: 700;">93.40%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-panel" style="padding: 10px; height: 62vh; box-shadow: inset 0 0 20px rgba(0,0,0,0.6);">
+                    <div style="width: 100%; height: 100%; background: #100e1a; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0, 240, 255, 0.15);">
+                        <iframe src="./certificates/paper.pdf#toolbar=1&navpanes=0&scrollbar=1" style="width: 100%; height: 100%; border: none; background: #ffffff;"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [分頁五：學術論文] -->
+            <div id="page-papers" class="page-view">
+                <div class="section-panel">
+                    <div class="panel-heading"><i class="fa-solid fa-scroll"></i> 投稿論文 <span>[ACADEMIC_PAPERS]</span></div>
+                    
+                    <a href="https://ieeexplore.ieee.org/document/11131049" target="_blank" class="interactive-card" style="margin-bottom: 12px; height: 75px; text-decoration: none; color: inherit;">
+                        <div>
+                            <strong style="color:var(--cyan-glow);">IS3C</strong>
+                            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">Smart Hiking Stick with IMU & AI Fatigue Monitoring</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square" style="color: var(--gold-accent); font-size: 0.9rem;"></i>
+                    </a>
+                    
+                    <div class="interactive-card locked-card" style="margin-bottom: 12px; height: 75px; position: relative;">
+                        <div>
+                            <span style="font-weight:700; color:var(--text-muted);">iFuzzy <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span>
+                            <p style="font-size:0.85rem; color:#625e70; margin-top:2px;">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
+                        </div>
+                        <i class="fa-solid fa-border-all" style="font-size: 0.95rem;"></i>
+                    </div>
+                    
+                    <div class="interactive-card" data-img="./certificates/ilt_hike.jpg" style="margin-bottom: 12px; height: 75px;">
+                        <div>
+                            <strong style="color:var(--cyan-glow);">ILT // 智能姿態監測</strong>
+                            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
+                        </div>
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    
+                    <div class="interactive-card" data-img="./certificates/ilt_sdr.jpg" style="height: 75px;">
+                        <div>
+                            <strong style="color:var(--cyan-glow);">ILT // 無線電搜救</strong>
+                            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">應用於山域搜救之軟體定義無線電頻率自動偵測與主動求救系統</p>
+                        </div>
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [分頁六：實地數據採集] -->
+            <div id="page-hobbies" class="page-view">
+                <div class="section-panel">
+                    <div class="panel-heading">
+                        <i class="fa-solid fa-compass"></i> 實地數據採集 <span>[FIELD_RESEARCH]</span>
+                    </div>
+                    <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; line-height: 1.7;">
+                        本研究為檢驗步態疲勞演算法與無線電傳輸模型之泛化能力，由研究團隊實地進行山域外測攀登。採集範疇涵蓋不同異質受試者之步態軌跡，並針對極端坡度、高海拔低壓環境、石階以及高飽和濃霧等複雜氣候與地貌，開展實地數據採集與邊緣端模型校準之研究足跡：
+                    </p>
+                    
+                    <div class="album-grid">
+                        <div class="album-card" data-img="./assets/mountain_hehuan.jpg">
+                            <img src="./assets/mountain_hehuan.jpg" onerror="this.src='https://via.placeholder.com/400x300?text=Hehuanshan+Main+Peak'">
+                            <div class="album-mask">
+                                <div style="font-weight: 700; font-size: 1rem; color: #fff;">合歡山主峰 (3,417m)</div>
+                                <div style="font-size: 0.8rem; color: var(--cyan-glow); margin-top: 4px; font-family: 'Inter';">高海拔稀薄大氣環境 / 生理疲勞數據特徵校準</div>
+                            </div>
+                        </div>
+
+                        <div class="album-card" data-img="./assets/mountain_henglingshan.jpg">
+                            <img src="./assets/mountain_henglingshan.jpg" onerror="this.src='https://via.placeholder.com/400x300?text=Henglingshan+Peak'">
+                            <div class="album-mask">
+                                <div style="font-weight: 700; font-size: 1rem; color: #fff;">橫嶺山主峰 (2,024m)</div>
+                                <div style="font-size: 0.8rem; color: var(--pink-accent); margin-top: 4px; font-family: 'Inter';">陡峭原始林道地貌 [坡度 >45°] / 極端非標準步態極限檢驗</div>
+                            </div>
+                        </div>
+
+                        <div class="album-card" data-img="./assets/mountain_manabang.jpg">
+                            <img src="./assets/mountain_manabang.jpg" onerror="this.src='https://via.placeholder.com/400x300?text=Manabang+Mountain'">
+                            <div class="album-mask">
+                                <div style="font-weight: 700; font-size: 1rem; color: #fff;">馬那邦山 (1,406m)</div>
+                                <div style="font-size: 0.8rem; color: var(--cyan-glow); margin-top: 4px; font-family: 'Inter';">多沙礫泥土自然山徑 / 跨使用者自適應機制驗證</div>
+                            </div>
+                        </div>
+
+                        <div class="album-card" data-img="./assets/mountain_qixing.jpg">
+                            <img src="./assets/mountain_qixing.jpg" onerror="this.src='https://via.placeholder.com/400x300?text=Qixing+Main+Peak'">
+                            <div class="album-mask">
+                                <div style="font-weight: 700; font-size: 1rem; color: #fff;">七星山主峰 (1,120m)</div>
+                                <div style="font-size: 0.8rem; color: var(--cyan-glow); margin-top: 4px; font-family: 'Inter';">連續大跨度石階地表 / 階梯攀登規律節奏與衝擊模型校正</div>
+                            </div>
+                        </div>
+
+                        <div class="album-card" data-img="./assets/mountain_eryanping.jpg">
+                            <img src="./assets/mountain_eryanping.jpg" onerror="this.src='https://via.placeholder.com/400x300?text=Alishan+Eryanping'">
+                            <div class="album-mask">
+                                <div style="font-weight: 700; font-size: 1rem; color: #fff;">阿里山二延平 (1,454m)</div>
+                                <div style="font-size: 0.8rem; color: var(--gold-accent); margin-top: 4px; font-family: 'Inter';">隙頂高飽和濃霧環境 / SDR 無線電多濕微氣候傳輸與抗衰減測試</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer style="text-align: center; padding: 40px 0; font-size: 0.8rem; color: var(--text-muted); letter-spacing: 2px;">
+                May All the Beauty be Blessed.
+            </footer>
+        </main>
+    </div>
+
+    <!-- 媒體自適應內容燈箱 -->
+    <div class="lightbox" id="gameLightbox">
+        <div class="lightbox-wrapper">
+            <button class="lightbox-close" id="closeLightbox"><i class="fa-solid fa-xmark"></i></button>
+            <div id="lightbox-media-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // 【核心控制：首頁跑馬燈動態排版控制】
+        const homeMarqueeImages = ['photo1.jpg', 'photo2.jpg', 'photo3.jpg'];
+        const marqueeTrack = document.getElementById('home-marquee-track');
+
+        function initHomeMarquee() {
+            const doubleImages = [...homeMarqueeImages, ...homeMarqueeImages];
+            doubleImages.forEach(filename => {
+                const itemPath = `./assets/marquee/${filename}`;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'marquee-item';
+                itemDiv.setAttribute('data-img', itemPath);
+                
+                const imgNode = document.createElement('img');
+                imgNode.src = itemPath;
+                imgNode.onerror = function() {
+                    this.src = `https://via.placeholder.com/240x180?text=${filename}`;
+                };
+                
+                itemDiv.appendChild(imgNode);
+                marqueeTrack.appendChild(itemDiv);
+            });
+        }
+        initHomeMarquee();
+
+
+        // 1. 進站加載動畫
+        const loader = document.getElementById('game-loader');
+        const loaderPercent = document.getElementById('loader-percent');
+        const loaderBar = document.getElementById('loader-bar');
+        let progress = 0;
+
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 8) + 2;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 600);
+                }, 400);
+            }
+            loaderPercent.innerText = `LOADING DATA // ${progress}%`;
+            loaderBar.style.width = `${progress}%`;
+        }, 40);
+
+        // 2. 分頁切換
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const pages = document.querySelectorAll('.page-view');
+        const mainContent = document.querySelector('main');
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const target = `page-${btn.getAttribute('data-target')}`;
+                pages.forEach(p => p.id === target ? p.classList.add('active') : p.classList.remove('active'));
+                mainContent.scrollTop = 0;
+            });
+        });
+
+        // 3. 媒體自適應燈箱控制引擎
+        const lightbox = document.getElementById('gameLightbox');
+        const mediaBox = document.getElementById('lightbox-media-box');
+        const closeBtn = document.getElementById('closeLightbox');
+
+        document.addEventListener('click', (e) => {
+            const el = e.target.closest('[data-img]');
+            if (!el || e.target.tagName === 'A' || e.target.closest('a')) return;
+            
+            const src = el.getAttribute('data-img');
+            if(!src) return;
+
+            mediaBox.innerHTML = '';
+
+            if (src.toLowerCase().endsWith('.pdf')) {
+                const iframe = document.createElement('iframe');
+                iframe.src = src;
+                mediaBox.appendChild(iframe);
+            } else {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = '憑證預覽';
+                mediaBox.appendChild(img);
+            }
+            lightbox.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => { lightbox.classList.remove('active'); mediaBox.innerHTML = ''; });
+        lightbox.addEventListener('click', (e) => { if(e.target === lightbox) { lightbox.classList.remove('active'); mediaBox.innerHTML = ''; } });
+
+        // 4. 「暫無資料」提示邏輯
+        document.querySelectorAll('.locked-card').forEach(el => {
+            el.addEventListener('click', () => {
+                alert(" [DATA_NOT_FOUND] // 暫無實體圖檔或憑證資料。 ");
+            });
+        });
+
+        // 5. 動態星海畫布
+        const canvas = document.getElementById('space-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let meteors = [];
+        const maxStars = 120;
+
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        for (let i = 0; i < maxStars; i++) {
+            stars.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                r: Math.random() * 1.2 + 0.3, opacity: Math.random() * 0.7 + 0.2,
+                factor: Math.random() * 0.02 + 0.005, increment: Math.random() > 0.5 ? 1 : -1
+            });
+        }
+
+        function createMeteor() {
+            meteors.push({
+                x: Math.random() * canvas.width * 1.2, y: -20,
+                length: Math.random() * 80 + 40, speed: Math.random() * 4 + 4, opacity: 1
+            });
+        }
+        setInterval(() => { if(meteors.length < 2) createMeteor(); }, Math.random() * 3000 + 3000);
+
+        function drawBackgroundAnimation() {
+            ctx.fillStyle = 'rgba(6, 4, 9, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            stars.forEach(star => {
+                star.opacity += star.factor * star.increment;
+                if (star.opacity > 0.9 || star.opacity < 0.1) star.increment *= -1;
+                ctx.beginPath(); ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2); ctx.fill();
+                star.y += 0.05; star.x -= 0.02;
+                if (star.y > canvas.height) { star.y = 0; star.x = Math.random() * canvas.width; }
+            });
+
+            meteors.forEach((meteor, index) => {
+                meteor.x -= meteor.speed; meteor.y += meteor.speed; meteor.opacity -= 0.015;
+                if (meteor.opacity <= 0) { meteors.splice(index, 1); return; }
+                let gradient = ctx.createLinearGradient(meteor.x, meteor.y, meteor.x + meteor.length, meteor.y - meteor.length);
+                gradient.addColorStop(0, `rgba(0, 240, 255, ${meteor.opacity})`);
+                gradient.addColorStop(1, 'rgba(0, 240, 255, 0)');
+                ctx.beginPath(); ctx.strokeStyle = gradient; ctx.lineWidth = 1.5;
+                ctx.moveTo(meteor.x, meteor.y); ctx.lineTo(meteor.x + meteor.length, meteor.y - meteor.length);
+                ctx.stroke();
+            });
+            requestAnimationFrame(drawBackgroundAnimation);
+        }
+        drawBackgroundAnimation();
+    </script>
+</body>
+</html>
