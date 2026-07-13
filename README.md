@@ -1,8 +1,5 @@
-# 🚀 WELCOME TO MY WORKSPACE
-
 <p align="center">
-  <img src="https://img.shields.io/badge/Status-Developing-green?style=for-the-badge&logo=github" alt="Status" />
-  <img src="https://img.shields.io/badge/Focus-Embedded_%2F_ML-blueviolet?style=for-the-badge" alt="Focus" />
+  <img src="https://raw.githubusercontent.com/HDE-N/HDE-N/main/banner.png" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80'" width="100%" alt="Header Banner" />
 </p>
 
 <p align="center">
