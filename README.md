@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=你的GitHub帳號&color=blueviolet&style=flat-square" alt="訪客計數器" />
+  <img src="https://komarev.com/ghpvc/?username=HDE-N&color=blueviolet&style=flat-square" alt="訪客計數器" />
 </p>
 
 ---
@@ -49,14 +49,13 @@
 
 ## 📊 GitHub Analytics
 
-<!-- 使用 HTML 表格讓兩張統計卡片並排，畫面更豐富齊整 -->
 <table border="0">
   <tr>
     <td align="center" width="50%">
-      <img src="https://github-readme-stats.vercel.app/api?username=你的GitHub帳號&show_icons=true&theme=dracula&include_all_commits=true&count_private=true" alt="GitHub Stats" width="100%" />
+      <img src="https://github-readme-stats-eight-theta.vercel.app/api?username=HDE-N&show_icons=true&theme=dracula&include_all_commits=true&count_private=true" alt="GitHub Stats" width="100%" />
     </td>
     <td align="center" width="50%">
-      <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=你的GitHub帳號&layout=compact&theme=dracula&langs_count=6" alt="Top Languages" width="100%" />
+      <img src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=HDE-N&layout=compact&theme=dracula&langs_count=6" alt="Top Languages" width="100%" />
     </td>
   </tr>
 </table>
@@ -64,8 +63,7 @@
 <br />
 
 <p align="center">
-  <!-- 這裡展示了你的年度貢獻連續紀錄（Streak） -->
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=你的GitHub帳號&theme=dracula" alt="GitHub Streak" />
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=HDE-N&theme=dracula" alt="GitHub Streak" />
 </p>
 
 ---
@@ -74,7 +72,7 @@
 
 <p align="center">
   <a href="https://github.com/ryo-ma/github-profile-trophy">
-    <img src="https://github-profile-trophy.vercel.app/?username=你的GitHub帳號&theme=dracula&column=7&margin-w=15" alt="GitHub Trophies" />
+    <img src="https://github-profile-trophy.vercel.app/?username=HDE-N&theme=dracula&column=7&margin-w=15" alt="GitHub Trophies" />
   </a>
 </p>
 
