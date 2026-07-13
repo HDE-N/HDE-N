@@ -1,5 +1,8 @@
+# 🚀 WELCOME TO MY WORKSPACE
+
 <p align="center">
-  <img src="https://capsule-render.vercel.app/content?type=waving&color=auto&height=200&section=header&text=Welcome%20to%20My%20Workspace&fontSize=50&animation=twinkling" />
+  <img src="https://img.shields.io/badge/Status-Developing-green?style=for-the-badge&logo=github" alt="Status" />
+  <img src="https://img.shields.io/badge/Focus-Embedded_%2F_ML-blueviolet?style=for-the-badge" alt="Focus" />
 </p>
 
 <p align="center">
