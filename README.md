@@ -71,7 +71,13 @@
 ## 🏅 Badges & Achievements
 
 <p align="center">
-  <img src="https://github-readme-stats-eight-theta.vercel.app/api/badge/?username=HDE-N&theme=dracula" alt="GitHub Badges" />
+  <a href="https://github.com/HDE-N?tab=achievements">
+    <img src="https://github.com/fluidicon.png" width="40" alt="GitHub" />
+    <img src="https://github.com/images/modules/profile/achievements/pull-shark-default.png" width="60" alt="Pull Shark" />
+    <img src="https://github.com/images/modules/profile/achievements/yolo-default.png" width="60" alt="YOLO" />
+    <img src="https://github.com/images/modules/profile/achievements/quickdraw-default.png" width="60" alt="Quickdraw" />
+    <img src="https://github.com/images/modules/profile/achievements/pair-extraordinaire-default.png" width="60" alt="Pair Extraordinaire" />
+  </a>
 </p>
 
 ---
