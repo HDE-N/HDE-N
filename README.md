@@ -20,14 +20,14 @@
 
 ## 🔬 About Me
 
-本研究空間專注於**嵌入式系統開發（Embedded Systems）**、**時序訊號分析（Time-Series Data Analysis）**與**機器學習（Machine Learning）**之學術與實務應用。致力於探討硬體感測器端點訊號（IMU）之特徵萃取，並結合深度學習模型實現邊緣運算（Edge AI）與穿戴式智慧系統。
+本研究空間專注於**嵌入式系統開發（Embedded Systems）**、**時序訊號分析（Time-Series Data Analysis）**與**機器學習（Machine Learning）**之學術與實務應用。致力於探討硬體感測器端點訊號（IMU）之特徵處理，並結合深度學習模型實現邊緣運算（Edge AI）與穿戴式智慧系統之應用。
 
 * 📑 **當前研究領域 (Current Research)**
-  * 基於慣性測量單元（IMU）感測訊號與深度學習架構（包含 GRU、BiGRU、對抗式自編碼器 AAE 等）之穿戴式人體疲勞特徵辨識系統研發。
+  * 基於慣性測量單元（IMU）感測訊號與自適應模型架構（Adaptive Model Architectures）之穿戴式人體疲勞特徵辨識系統研發。
 * 🛠️ **核心技術專長 (Core Expertise)**
-  * 微處理器（ESP32 系列）韌體開發、數位訊號特徵工程、Linux 系統環境建置及邊緣伺服器維護。
+  * 數位訊號特徵工程、基於 PyTorch 框架之深度學習模型開發。
 * 🌐 **個人興趣 (Interests)**
-  * 戶外登山運動、業餘無線電技術研究（Class 3 Amateur Radio）。
+  * 戶外登山運動。
 
 ---
 
