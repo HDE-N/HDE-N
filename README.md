@@ -1,4 +1,17 @@
-# 📊 Scientific Research & Embedded Development Workspace
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:9B5DE5,100:6A0DAD&height=220&section=header&text=HDE-N&fontSize=70&animation=fadeIn&fontAlignY=35&desc=Embedded%20AI%20%26%20Signal%20Processing&descAlignY=60&descAlign=58" width="100%" />
+</div>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Researching-9B5DE5?style=for-the-badge&logo=github" alt="Status" />
+  <img src="https://img.shields.io/badge/Focus-Embedded_ML_%2F_Signal_Processing-blueviolet?style=for-the-badge" alt="Focus" />
+</p>
+
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=HDE-N&color=9B5DE5&style=flat-square" alt="Visitor Count" />
+</p>
+
+---
 
 <p align="center">
   <a href="https://git.io/typing-svg">
