@@ -1,7 +1,6 @@
 # 📊 Scientific Research & Embedded Development Workspace
 
 <p align="center">
-  <!-- 1. 動態打字特效 (Typing SVG Effect) -->
   <a href="https://git.io/typing-svg">
     <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3500&pause=1000&color=9B5DE5&center=true&vCenter=true&width=550&height=50&lines=Embedded+Systems+Researcher;Time-Series+Data+Analysis;PyTorch+%2B+Sensors" alt="Typing SVG" />
   </a>
@@ -81,22 +80,10 @@
 
 ---
 
-## 🏔️ 3D Contribution Graph (立體貢獻度特效)
+## 📈 Weekly Contribution Activity
 
-<!-- 2. 3D 貢獻圖特效：不需設定，直接讀取公開數據產生極具現代感的 3D 條形圖 -->
 <p align="center">
-  <img src="https://github-profile-3d-contrib.vercel.app/api?username=HDE-N&theme=nord" alt="3D Contribution Graph" width="100%" />
-</p>
-
----
-
-## 💡 Inspiring Quotes (學術/編程名言輪播)
-
-<!-- 3. 動態名言輪播：每次重新整理都會載入一則不同的經典程式或科學思維名言 -->
-<p align="center">
-  <a href="https://github.com/gopinathsjsu/academic-quotes">
-    <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=radical" alt="Developer Quotes" />
-  </a>
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=HDE-N&theme=dracula&bg_color=1e1e2e&hide_border=true" alt="GitHub Activity Graph" width="100%" />
 </p>
 
 ---
