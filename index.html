@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>黃大恩 D.-E. Huang | 聯網終端</title>
+    <!-- 引入通用英數字體 Inter 與圖標 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -28,6 +29,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            /* 隱藏預設滑鼠指標 */
+            cursor: none !important;
         }
 
         body {
@@ -40,16 +43,78 @@
             position: relative;
         }
 
+        /* ==================== [ 零延遲賽博科技十字游標系統 ] ==================== */
+        #custom-cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--cyan-glow);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 99999;
+            box-shadow: 0 0 8px var(--cyan-glow);
+            transition: width 0.15s, height 0.15s, background-color 0.15s;
+        }
+
+        #custom-cursor-tech {
+            width: 24px;
+            height: 24px;
+            position: fixed;
+            transform: translate(-50%, -50%) rotate(0deg);
+            pointer-events: none;
+            z-index: 99998;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                        width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                        height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                        opacity 0.3s;
+        }
+
+        /* 繪製科技感十足的十字準星刻度 */
+        #custom-cursor-tech::before, #custom-cursor-tech::after {
+            content: '';
+            position: absolute;
+            background-color: rgba(0, 240, 255, 0.5);
+            transition: background-color 0.3s;
+        }
+        /* 十字縱線 */
+        #custom-cursor-tech::before {
+            top: 0; left: 50%; width: 1.5px; height: 100%; transform: translateX(-50%);
+        }
+        /* 十字橫線 */
+        #custom-cursor-tech::after {
+            top: 50%; left: 0; width: 100%; height: 1.5px; transform: translateY(-50%);
+        }
+
+        /* 懸停於互動元素時，游標產生超酷炫動畫 */
+        body.cursor-hover #custom-cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--pink-accent);
+            box-shadow: 0 0 12px var(--pink-accent);
+        }
+
+        body.cursor-hover #custom-cursor-tech {
+            width: 52px;
+            height: 52px;
+            transform: translate(-50%, -50%) rotate(45deg) !important;
+            filter: drop-shadow(0 0 8px var(--pink-accent));
+        }
+        body.cursor-hover #custom-cursor-tech::before,
+        body.cursor-hover #custom-cursor-tech::after {
+            background-color: var(--pink-accent);
+        }
+
         /* 滿版動態 Canvas 背景 */
         #space-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none;
-            background: radial-gradient(circle at 50% 30%, #12092b 0%, #040207 100%);
+            z-index: -1; pointer-events: auto;
+            background: radial-gradient(circle at 50% 30%, #0d0622 0%, #030106 100%);
         }
 
         .tech-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.06; pointer-events: none;
+            z-index: -1; opacity: 0.05; pointer-events: none;
             background-image: 
                 linear-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 240, 255, 0.15) 1px, transparent 1px);
@@ -58,7 +123,7 @@
         .tech-overlay::after {
             content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2; background-size: 100% 3px, 6px 100%; pointer-events: none; opacity: 0.4;
+            z-index: 2; background-size: 100% 3px, 6px 100%; pointer-events: none; opacity: 0.3;
         }
 
         /* ==================== [ 開頭加載動畫 - Glitch 終端風格 ] ==================== */
@@ -113,7 +178,7 @@
         }
 
         /* 主內容區 */
-        main { flex-grow: 1; height: 100vh; overflow-y: auto; padding: 50px; position: relative; scroll-behavior: smooth; }
+        main { flex-grow: 1; height: 100vh; overflow-y: auto; padding: 50px; position: relative; scroll-behavior: smooth; z-index: 5; }
 
         /* ==================== [ 幾何切面核心面板 ] ==================== */
         .page-view { display: none; max-width: 1000px; margin: 0 auto; }
@@ -140,33 +205,39 @@
             transform: translateY(-2px);
         }
         
+        /* 大幅放大核心小標題字體 */
         .panel-heading {
-            font-size: 1.3rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 25px;
-            display: flex; align-items: center; gap: 12px; color: #fff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 12px;
+            font-size: 1.75rem; 
+            font-weight: 900; 
+            letter-spacing: 2px; 
+            margin-bottom: 25px;
+            display: flex; 
+            align-items: center; 
+            gap: 14px; 
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+            padding-bottom: 14px;
             position: relative;
         }
-        /* 標題下方流動雷射條 */
         .panel-heading::after {
-            content: ''; position: absolute; bottom: -1px; left: 0; width: 40px; height: 1px; background: var(--cyan-glow); box-shadow: 0 0 8px var(--cyan-glow);
+            content: ''; position: absolute; bottom: -1px; left: 0; width: 60px; height: 2px; background: var(--cyan-glow); box-shadow: 0 0 10px var(--cyan-glow);
         }
         .panel-heading i { color: var(--cyan-glow); animation: pulseIcon 2s infinite alternate; }
-        @keyframes pulseIcon { from { opacity: 0.5; filter: drop-shadow(0 0 0px var(--cyan-glow)); } to { opacity: 1; filter: drop-shadow(0 0 4px var(--cyan-glow)); } }
+        @keyframes pulseIcon { from { opacity: 0.5; filter: drop-shadow(0 0px 0px var(--cyan-glow)); } to { opacity: 1; filter: drop-shadow(0 0 4px var(--cyan-glow)); } }
         
         .panel-heading span { 
-            font-size: 0.72rem; color: var(--gold-accent); letter-spacing: 2px; margin-left: auto; font-weight: 500; font-family: monospace;
+            font-size: 0.8rem; color: var(--gold-accent); letter-spacing: 2px; margin-left: auto; font-weight: 500; font-family: monospace;
             transition: color 0.3s;
         }
-        /* 懸停時英文編碼產生Glitch顫動感 */
         .section-panel:hover .panel-heading span { color: var(--pink-accent); text-shadow: 0 0 5px var(--pink-accent); }
 
         .sub-panel-title {
-            font-size: 0.92rem; font-weight: 700; color: var(--gold-accent);
+            font-size: 1.05rem; font-weight: 700; color: var(--gold-accent);
             letter-spacing: 1.5px; margin: 25px 0 12px 0; display: flex; align-items: center; gap: 8px;
-            opacity: 0.9; border-left: 2px solid var(--gold-accent); padding-left: 8px;
+            opacity: 0.9; border-left: 3px solid var(--gold-accent); padding-left: 8px;
         }
 
-        /* 互動卡片主內容特效優化 */
+        /* 互動卡片主內容 */
         .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
         .interactive-card {
             background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04);
@@ -175,7 +246,6 @@
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); font-size: 0.92rem; font-weight: 500;
             position: relative; overflow: hidden;
         }
-        /* 卡片內部微光平移掃描特效 */
         .interactive-card::before {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.05), transparent);
@@ -222,7 +292,7 @@
         .btn-game.secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.18); }
         .btn-game.secondary:hover { border-color: var(--pink-accent); color: var(--pink-accent); box-shadow: 0 0 20px rgba(255, 74, 154, 0.3); background: rgba(255, 74, 154, 0.02); }
 
-        /* 相簿選單與跑馬燈升級 */
+        /* 相簿選單與跑馬燈 */
         .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .album-card {
             position: relative; overflow: hidden; border-radius: 4px; border: 1px solid rgba(255,255,255,0.06);
@@ -235,7 +305,7 @@
             background: linear-gradient(to top, rgba(4,2,7,0.95), transparent); font-size: 0.92rem; font-weight: 700;
         }
 
-        /* 跑馬燈容器主內容發光優化 */
+        /* 跑馬燈容器 */
         .marquee-container {
             width: 100%; overflow: hidden; position: relative; padding: 12px 0;
             background: rgba(0, 0, 0, 0.3); border-radius: 4px; border: 1px solid rgba(255,255,255,0.02);
@@ -283,21 +353,93 @@
         .lightbox-close { position: absolute; top: -45px; right: 0; background: none; border: none; color: var(--cyan-glow); font-size: 2.2rem; cursor: pointer; transition: color 0.2s; }
         .lightbox-close:hover { color: #fff; }
 
-        .pill { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 6px 14px; border-radius: 4px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500; transition: all 0.3s; }
-        .section-panel:hover .pill { border-color: rgba(0, 240, 255, 0.15); color: #fff; }
+        /* 聯絡協定樣式 */
+        .comm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 25px; }
+        .comm-link {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 20px; border-radius: 4px;
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none; color: var(--text-muted);
+            font-weight: 700; font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .comm-link i { font-size: 1.2rem; transition: transform 0.3s; }
+        .comm-link:hover {
+            color: #fff;
+            background: linear-gradient(90deg, rgba(255, 74, 154, 0.05), transparent);
+            border-color: var(--pink-accent);
+            box-shadow: -3px 0 0px var(--pink-accent), 0 8px 20px rgba(255, 74, 154, 0.05);
+            transform: translateY(-2px);
+        }
+        .comm-link:hover i { transform: scale(1.15); text-shadow: 0 0 8px var(--pink-accent); }
+        .comm-link.discord-link:hover {
+            background: linear-gradient(90deg, rgba(88, 101, 242, 0.1), transparent);
+            border-color: #5865F2;
+            box-shadow: -3px 0 0px #5865F2, 0 8px 20px rgba(88, 101, 242, 0.05);
+        }
+        .comm-link.line-link:hover {
+            background: linear-gradient(90deg, rgba(6, 199, 85, 0.1), transparent);
+            border-color: #06C755;
+            box-shadow: -3px 0 0px #06C755, 0 8px 20px rgba(6, 199, 85, 0.05);
+        }
+        .comm-link.gmail-link:hover {
+            background: linear-gradient(90deg, rgba(234, 67, 53, 0.1), transparent);
+            border-color: #EA4335;
+            box-shadow: -3px 0 0px #EA4335, 0 8px 20px rgba(234, 67, 53, 0.05);
+        }
+
+        /* 字體懸停平滑放大動效 */
+        .zoom-text {
+            display: inline-block;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        color 0.3s ease, 
+                        text-shadow 0.3s ease;
+        }
+        .zoom-text:hover {
+            transform: scale(1.05);
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.2), 0 0 20px var(--cyan-glow);
+        }
+
+        /* 專業小方框樣式與懸停微光動效 */
+        .pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 6px 14px; 
+            border-radius: 4px; 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .pill:hover {
+            transform: scale(1.12);
+            color: #ffffff;
+            border-color: var(--cyan-glow);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), transparent);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
     </style>
 </head>
 <body>
 
+    <!-- 客製化雙層幾何游標節點 -->
+    <div id="custom-cursor-dot"></div>
+    <div id="custom-cursor-tech"></div>
+
     <canvas id="space-canvas"></canvas>
     <div class="tech-overlay"></div>
 
+    <!-- 加載動畫 -->
     <div id="game-loader">
         <div class="loader-ring"></div>
         <div class="loader-text" id="loader-percent">LOADING CONNECTIONS // 0%</div>
         <div class="loader-progress"><div class="loader-bar" id="loader-bar"></div></div>
     </div>
 
+    <!-- 主要佈局 -->
     <div class="wrapper">
         <sidebar>
             <div class="sidebar-top">
@@ -317,16 +459,36 @@
         </sidebar>
 
         <main>
+            <!-- [分頁一：系統主頁] -->
             <div id="page-home" class="page-view active">
                 <div class="section-panel" style="padding: 45px; margin-bottom: 25px;">
-                    <div style="display: flex; align-items: center; gap: 35px;">
+                    <div style="display: flex; align-items: start; gap: 35px;">
                         <img src="./assets/avatar.png" style="width: 120px; height: 120px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 0 15px rgba(255,255,255,0.05);" onerror="this.src='https://via.placeholder.com/120'">
-                        <div>
-                            <h2 style="font-size: 2.4rem; font-weight: 900; letter-spacing: -0.5px;">黃大恩 <span style="font-size: 0.82rem; background: var(--pink-accent); padding: 3px 8px; border-radius: 4px; margin-left: 10px; vertical-align: middle; font-weight: 700;">UID: 3B241085</span></h2>
+                        <div style="flex-grow: 1;">
+                            <h2 style="font-size: 2.4rem; font-weight: 900; letter-spacing: -0.5px;">
+                                <span class="zoom-text">黃大恩</span> 
+                                <span style="font-size: 0.82rem; background: var(--pink-accent); padding: 3px 8px; border-radius: 4px; margin-left: 10px; vertical-align: middle; font-weight: 700;">UID: 3B241085</span>
+                            </h2>
                             <p style="color: var(--cyan-glow); font-weight: 700; font-size: 0.88rem; letter-spacing: 1.5px; margin-top: 6px; font-family: monospace;">WELCOME, BON VOYAGE.</p>
-                            <p style="color: var(--text-muted); margin-top: 15px; font-size: 0.98rem; max-width: 750px;">
+                            <p class="zoom-text" style="color: var(--text-muted); margin-top: 15px; font-size: 0.98rem; max-width: 750px; line-height: 1.6;">
                                 專注於人工智慧、機器學習與時序數據分析。擅長將演算法與硬體架構融合，打造具備前瞻性的物聯網智慧疲勞觀測與山域救援終端系統。
                             </p>
+                            
+                            <!-- 聯絡方式協定連結區塊 -->
+                            <div class="comm-grid">
+                                <a href="https://discord.com/users/1060934757628874834" target="_blank" class="comm-link discord-link">
+                                    <i class="fa-brands fa-discord" style="color: #5865F2;"></i>
+                                    <span>DISCORD // black_ncut</span>
+                                </a>
+                                <a href="https://line.me/ti/p/你的LINE連結" target="_blank" class="comm-link line-link">
+                                    <i class="fa-brands fa-line" style="color: #06C755;"></i>
+                                    <span>LINE // 通訊</span>
+                                </a>
+                                <a href="mailto:你的Gmail帳號@gmail.com" class="comm-link gmail-link">
+                                    <i class="fa-solid fa-envelope" style="color: #EA4335;"></i>
+                                    <span>GMAIL // 傳輸</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -343,67 +505,64 @@
                         <div class="panel-heading"><i class="fa-solid fa-star"></i> 榮譽 <span>[LEGEND]</span></div>
                         <div style="display: flex; flex-direction: column; gap: 10px;">
                             <div class="interactive-card" data-img="./certificates/youth_2025.png">
-                                <span>114 (2025) 學年度優秀青年</span> <i class="fa-solid fa-eye"></i>
+                                <span class="zoom-text">114 (2025) 學年度優秀青年</span> <i class="fa-solid fa-eye"></i>
                             </div>
                             <div class="interactive-card" data-img="./certificates/scholarship.jpg">
-                                <span>青永勤學愛校學生獎助學金</span> <i class="fa-solid fa-eye"></i>
+                                <span class="zoom-text">青永勤學愛校學生獎助學金</span> <i class="fa-solid fa-eye"></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 首頁生活/活動照片跑馬燈 -->
                 <div class="section-panel" style="padding: 20px;">
                     <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
                         FIELD_ACTIVITY_LOG // 活動紀錄 (點擊檢視大圖)
                     </div>
                     <div class="marquee-container">
                         <div class="marquee-track" id="home-marquee-track">
-                            </div>
+                            <!-- 由 JavaScript 動態生成注入 -->
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- [分頁二：專業憑證] -->
             <div id="page-certs" class="page-view">
                 <div class="section-panel" style="margin-bottom: 25px;">
                     <div class="panel-heading"><i class="fa-solid fa-id-card"></i> 數據集成憑證 <span>[CERTIFICATES]</span></div>
                     
                     <div class="sub-panel-title"><i class="fa-solid fa-graduation-cap"></i> 大學憑證 [UNIVERSITY_LEVEL]</div>
                     <div class="list-container" style="margin-bottom: 25px;">
-                        <div class="interactive-card" data-img="./certificates/cpe.png"><span>CPE 4題 PR 94</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/ipas.jpg"><span>iPAS AI應用規劃師 中級</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/tqc.jpg"><span>TQC+ Python3 第二版</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/gemini_std.png"><span>Gemini Certified Student</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/gemini_fac.png"><span>Gemini Certified Faculty</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/jetson.png"><span>AI on Jetson Nano 結業</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/radio.jpg"><span>三等業餘無線電執照</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/cpe.pdf"><span class="zoom-text">CPE 4題</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/ipas.jpg"><span class="zoom-text">iPAS AI應用規劃師 中級</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/tqc.jpg"><span class="zoom-text">TQC+ Python3 第二版</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/gemini_std.png"><span class="zoom-text">Gemini Certified Student</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/gemini_fac.png"><span class="zoom-text">Gemini Certified Faculty</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/jetson.png"><span class="zoom-text">AI on Jetson Nano 結業</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/radio.jpg"><span class="zoom-text">三等業餘無線電執照</span><i class="fa-solid fa-eye"></i></div>
                     </div>
 
                     <div class="sub-panel-title"><i class="fa-solid fa-school"></i> 高中憑證 [HIGH_SCHOOL_LEVEL]</div>
                     <div class="list-container">
                         <div class="interactive-card" data-img="./certificates/software_level_b.jpg">
-                            <div><span>電腦軟體應用 乙級</span></div>
+                            <div><span class="zoom-text">電腦軟體應用 乙級</span></div>
                             <i class="fa-solid fa-eye"></i>
                         </div>
                         <div class="interactive-card locked-card">
-                            <div><span>APCS 專業檢定 3+3 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
+                            <div><span class="zoom-text">APCS 3+3 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
                             <i class="fa-solid fa-border-all"></i>
                         </div>
                     </div>
                 </div>
 
+                <!-- 證照預覽跑馬燈 -->
                 <div class="section-panel" style="padding: 20px;">
                     <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
                         CREDENTIAL_PREVIEW_MATRIX // 憑證圖檔即時預覽 (點擊檢視大圖)
                     </div>
                     <div class="marquee-container">
-                        <div class="marquee-track">
-                            <div class="marquee-item" data-img="./certificates/ipas.jpg"><img src="./certificates/ipas.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=iPAS'"></div>
-                            <div class="marquee-item" data-img="./certificates/tqc.jpg"><img src="./certificates/tqc.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=TQC%2B+Python'"></div>
-                            <div class="marquee-item" data-img="./certificates/gemini_std.png"><img src="./certificates/gemini_std.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Student'"></div>
-                            <div class="marquee-item" data-img="./certificates/gemini_fac.png"><img src="./certificates/gemini_fac.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Faculty'"></div>
-                            <div class="marquee-item" data-img="./certificates/jetson.png"><img src="./certificates/jetson.png" onerror="this.src='https://via.placeholder.com/240x180?text=Jetson+Nano'"></div>
-                            <div class="marquee-item" data-img="./certificates/software_level_b.jpg"><img src="./certificates/software_level_b.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Software+Level+B'"></div>
-                            
+                        <div class="marquee-track class-auto-marquee">
                             <div class="marquee-item" data-img="./certificates/ipas.jpg"><img src="./certificates/ipas.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=iPAS'"></div>
                             <div class="marquee-item" data-img="./certificates/tqc.jpg"><img src="./certificates/tqc.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=TQC%2B+Python'"></div>
                             <div class="marquee-item" data-img="./certificates/gemini_std.png"><img src="./certificates/gemini_std.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Student'"></div>
@@ -415,44 +574,40 @@
                 </div>
             </div>
 
+            <!-- [分頁三：競賽紀錄] -->
             <div id="page-comps" class="page-view">
                 <div class="section-panel" style="margin-bottom: 20px;">
                     <div class="panel-heading"><i class="fa-solid fa-trophy"></i> 歷年競賽紀錄 <span>[RECORDS]</span></div>
                     
                     <div class="sub-panel-title"><i class="fa-solid fa-graduation-cap"></i> 大學紀錄 [UNIVERSITY_LEVEL]</div>
                     <div class="list-container" style="grid-template-columns: 1fr; margin-bottom: 25px;">
-                        <div class="interactive-card" data-img="./certificates/race_2024.jpg"><span>2024 程速勁賽 全國第一名</span><i class="fa-solid fa-crown" style="color:var(--gold-accent);"></i></div>
-                        <div class="interactive-card" data-img="./certificates/race_2024_prog.jpg"><span>113年 (2024) 全國程式力競賽 第二名</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/race_2026_prog.jpg"><span>115年 (2026) 全國程式力競賽 第二名</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/race_2025.png"><span>2025 金象盃 全國第三名</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/race_2023.jpg"><span>2023 金象盃 全國優勝</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/info_2023.jpg"><span>2024 資訊月中區個人組 優勝</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/smart_2024.jpg"><span>2024 全國智慧製造大數據分析競賽 入圍</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2024.jpg"><span class="zoom-text">2024 程速勁賽 全國第一名</span><i class="fa-solid fa-crown" style="color:var(--gold-accent);"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2024_prog.jpg"><span class="zoom-text">113年 (2024) 全國程式力競賽 第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2026_prog.jpg"><span class="zoom-text">115年 (2026) 全國程式力競賽 第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2025.png"><span class="zoom-text">2025 金象盃 全國第三名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2023.jpg"><span class="zoom-text">2023 金象盃 全國優勝</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/info_2023.jpg"><span class="zoom-text">2024 資訊月中區個人組 優勝</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/smart_2024.jpg"><span class="zoom-text">2024 全國智慧製造大數據分析競賽 入圍</span><i class="fa-solid fa-eye"></i></div>
                     </div>
 
                     <div class="sub-panel-title"><i class="fa-solid fa-school"></i> 高中紀錄 [HIGH_SCHOOL_LEVEL]</div>
                     <div class="list-container" style="grid-template-columns: 1fr;">
-                        <div class="interactive-card" data-img="./certificates/high_skills_2022.jpg"><span>111年 (2022) 全國高級中等學校技藝競賽 程式設計 全國第18名</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/high_info_2022.jpg"><span>111年 (2022) 資訊月中區團體組 第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/high_skills_2022.jpg"><span class="zoom-text">111年 (2022) 全國高級中等學校技藝競賽 程式設計 全國第18名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/high_info_2022.jpg"><span class="zoom-text">111年 (2022) 資訊月中區團體組 第二名</span><i class="fa-solid fa-eye"></i></div>
                         <div class="interactive-card locked-card">
-                            <div><span>111年 (2022) 青年程式設計競賽 全國佳作 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
+                            <div><span class="zoom-text">111年 (2022) 青年程式設計競賽 全國佳作 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
                             <i class="fa-solid fa-border-all"></i>
                         </div>
                     </div>
                 </div>
 
+                <!-- 競賽獎狀跑馬燈 -->
                 <div class="section-panel" style="padding: 20px;">
                     <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
                         HONOR_CERTIFICATE_MATRIX // 競賽實體獎狀成果 (點擊檢視大圖)
                     </div>
                     <div class="marquee-container">
-                        <div class="marquee-track">
-                            <div class="marquee-item" data-img="./certificates/race_2024.jpg"><img src="./certificates/race_2024.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2024'"></div>
-                            <div class="marquee-item" data-img="./certificates/race_2024_prog.jpg"><img src="./certificates/race_2024_prog.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Prog+2024'"></div>
-                            <div class="marquee-item" data-img="./certificates/race_2025.png"><img src="./certificates/race_2025.png" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2025'"></div>
-                            <div class="marquee-item" data-img="./certificates/race_2023.jpg"><img src="./certificates/race_2023.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2023'"></div>
-                            <div class="marquee-item" data-img="./certificates/info_2023.jpg"><img src="./certificates/info_2023.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Info+2023'"></div>
-                            
+                        <div class="marquee-track class-auto-marquee">
                             <div class="marquee-item" data-img="./certificates/race_2024.jpg"><img src="./certificates/race_2024.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2024'"></div>
                             <div class="marquee-item" data-img="./certificates/race_2024_prog.jpg"><img src="./certificates/race_2024_prog.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Prog+2024'"></div>
                             <div class="marquee-item" data-img="./certificates/race_2025.png"><img src="./certificates/race_2025.png" onerror="this.src='https://via.placeholder.com/240x180?text=Race+2025'"></div>
@@ -463,6 +618,7 @@
                 </div>
             </div>
 
+            <!-- [分頁四：畢業專題] -->
             <div id="page-project" class="page-view">
                 <div class="section-panel" style="margin-bottom: 20px;">
                     <div class="panel-heading">
@@ -470,8 +626,8 @@
                     </div>
                     <div class="project-box" style="grid-template-columns: 1.1fr 0.9fr; gap: 30px; display: grid; align-items: start;">
                         <div>
-                            <h3 style="font-size: 1.35rem; color: var(--cyan-glow); font-weight: 900;">
-                                智慧登山杖：結合 IMU 與 AI 疲勞監測的登山安全輔助系統
+                            <h3 class="zoom-text" style="font-size: 1.35rem; color: var(--cyan-glow); font-weight: 900;">
+                               智慧登山杖：結合 IMU 與 AI 疲勞監測的登山安全輔助系統
                             </h3>
                             <p style="color: var(--text-muted); margin-top: 12px; font-size: 0.92rem; line-height: 1.7; text-align: justify;">
                                  本專題實作完整的邊緣端機器學習與應急無線電偵測流程。研究涵蓋野外實地數據蒐集，建構逾 20 小時之真實高山步態時序資料庫；前處理階段導入去噪擴散機率模型（DDPM）執行高階數據增強，消弭樣本不平衡；藉由三軸加速度與三軸陀螺儀訊號進行時序特徵擷取。模型訓練階段採用輕量化門控循環單元（GRU）捕捉步態演變特徵，並於邊緣端推理架構整合 CORAL 演算法，實作無監督領域自適應校準，有效消弭跨使用者與地形差異之領域偏移。
@@ -479,7 +635,7 @@
                             
                             <div class="interactive-card" data-img="./certificates/project_award_2nd.jpg" style="margin-top: 20px; width: 100%; max-width: 450px;">
                                 <div>
-                                    <span style="font-weight:700;">2026 實務專題競賽 第二名</span>
+                                    <span class="zoom-text" style="font-weight:700;">2026 實務專題競賽 第二名</span>
                                 </div>
                                 <i class="fa-solid fa-eye"></i>
                             </div>
@@ -512,13 +668,14 @@
                 </div>
             </div>
 
+            <!-- [分頁五：學術論文] -->
             <div id="page-papers" class="page-view">
                 <div class="section-panel">
                     <div class="panel-heading"><i class="fa-solid fa-scroll"></i> 投稿論文 <span>[ACADEMIC_PAPERS]</span></div>
                     
                     <a href="https://ieeexplore.ieee.org/document/11131049" target="_blank" class="interactive-card" style="margin-bottom: 12px; height: 75px; text-decoration: none; color: inherit;">
                         <div>
-                            <strong style="color:var(--cyan-glow);">IS3C</strong>
+                            <strong style="color:var(--cyan-glow);" class="zoom-text">IS3C</strong>
                             <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">Smart Hiking Stick with IMU & AI Fatigue Monitoring</p>
                         </div>
                         <i class="fa-solid fa-arrow-up-right-from-square" style="color: var(--gold-accent); font-size: 0.9rem;"></i>
@@ -526,7 +683,7 @@
                     
                     <div class="interactive-card locked-card" style="margin-bottom: 12px; height: 75px; position: relative;">
                         <div>
-                            <span style="font-weight:700; color:var(--text-muted);">iFuzzy <span style="font-size:0.75rem; color:#4e4a5c;">(暫無圖片資料)</span></span>
+                            <span style="font-weight:700; color:var(--text-muted);" class="zoom-text">iFuzzy <span style="font-size:0.75rem; color:#4e4a5c;">(暫無圖片資料)</span></span>
                             <p style="font-size:0.85rem; color:#625e70; margin-top:2px;">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
                         </div>
                         <i class="fa-solid fa-border-all" style="font-size: 0.95rem;"></i>
@@ -534,7 +691,7 @@
                     
                     <div class="interactive-card" data-img="./certificates/ilt_hike.jpg" style="margin-bottom: 12px; height: 75px;">
                         <div>
-                            <strong style="color:var(--cyan-glow);">ILT // 智能姿態監測</strong>
+                            <strong style="color:var(--cyan-glow);" class="zoom-text">ILT // 智能姿態監測</strong>
                             <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
                         </div>
                         <i class="fa-solid fa-file-lines"></i>
@@ -542,7 +699,7 @@
                     
                     <div class="interactive-card" data-img="./certificates/ilt_sdr.jpg" style="height: 75px;">
                         <div>
-                            <strong style="color:var(--cyan-glow);">ILT // 無線電搜救</strong>
+                            <strong style="color:var(--cyan-glow);" class="zoom-text">ILT // 無線電搜救</strong>
                             <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">應用於山域搜救之軟體定義無線電頻率自動偵測與主動求救系統</p>
                         </div>
                         <i class="fa-solid fa-file-lines"></i>
@@ -550,13 +707,14 @@
                 </div>
             </div>
 
+            <!-- [分頁六：實地數據採集] -->
             <div id="page-hobbies" class="page-view">
                 <div class="section-panel">
                     <div class="panel-heading">
                         <i class="fa-solid fa-compass"></i> 實地數據採集 <span>[FIELD_RESEARCH]</span>
                     </div>
                     <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; line-height: 1.7; text-align: justify;">
-                        本研究為檢驗步態疲勞演算法與無線電傳輸模型之泛化能力，由研究團隊實地進行山域外測攀登。採集範疇涵蓋不同異質受試者之步態軌跡，並針對極端坡度、高海拔低壓環境、石階以及高飽和濃霧等複雜氣候與地貌，開展實地數據採集與邊緣端模型校準之研究足跡：
+                        本研究為檢驗步態疲勞演算法與無線電傳導模型之泛化能力，由研究團隊實地進行山域外測攀登。採集範疇涵蓋不同異質受試者之步態軌跡，並針對極端坡度、高海拔低壓環境、石階以及高飽和濃霧等複雜氣候與地貌，開展實地數據採集與邊緣端模型校準之研究足跡：
                     </p>
                     
                     <div class="album-grid">
@@ -604,6 +762,7 @@
         </main>
     </div>
 
+    <!-- 媒體自適應內容燈箱 -->
     <div class="lightbox" id="gameLightbox">
         <div class="lightbox-wrapper">
             <button class="lightbox-close" id="closeLightbox"><i class="fa-solid fa-xmark"></i></button>
@@ -612,29 +771,36 @@
     </div>
 
     <script>
-        // 【核心控制：首頁跑馬燈動態排版控制】
-        const homeMarqueeImages = ['photo1.jpg', 'photo2.jpg', 'photo3.jpg'];
-        const marqueeTrack = document.getElementById('home-marquee-track');
+        // 【核心優化一：集中管理全站所有跑馬燈的無縫無錯對接】
+        function initAllMarquees() {
+            // A. 初始化首頁跑馬燈
+            const homeMarqueeImages = ['photo1.jpg', 'photo2.jpg', 'photo3.jpg'];
+            const marqueeTrack = document.getElementById('home-marquee-track');
+            if (marqueeTrack) {
+                const doubleImages = [...homeMarqueeImages, ...homeMarqueeImages];
+                doubleImages.forEach(filename => {
+                    const itemPath = `./assets/marquee/${filename}`;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'marquee-item';
+                    itemDiv.setAttribute('data-img', itemPath);
+                    const imgNode = document.createElement('img');
+                    imgNode.src = itemPath;
+                    imgNode.onerror = function() { this.src = `https://via.placeholder.com/240x180?text=${filename}`; };
+                    itemDiv.appendChild(imgNode);
+                    marqueeTrack.appendChild(itemDiv);
+                });
+            }
 
-        function initHomeMarquee() {
-            const doubleImages = [...homeMarqueeImages, ...homeMarqueeImages];
-            doubleImages.forEach(filename => {
-                const itemPath = `./assets/marquee/${filename}`;
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'marquee-item';
-                itemDiv.setAttribute('data-img', itemPath);
-                
-                const imgNode = document.createElement('img');
-                imgNode.src = itemPath;
-                imgNode.onerror = function() {
-                    this.src = `https://via.placeholder.com/240x180?text=${filename}`;
-                };
-                
-                itemDiv.appendChild(imgNode);
-                marqueeTrack.appendChild(itemDiv);
+            // B. 自動為 HTML 寫死的靜態跑馬燈補齊雙倍複製節點（避免斷軌露出大白邊）
+            document.querySelectorAll('.class-auto-marquee').forEach(track => {
+                const originalItems = Array.from(track.children);
+                originalItems.forEach(item => {
+                    const clone = item.cloneNode(true);
+                    track.appendChild(clone);
+                });
             });
         }
-        initHomeMarquee();
+        initAllMarquees();
 
 
         // 1. 進站加載動畫
@@ -713,54 +879,109 @@
         lightbox.addEventListener('click', (e) => { if(e.target === lightbox) { lightbox.classList.remove('active'); mediaBox.innerHTML = ''; } });
 
         // 4. 「暫無資料」提示邏輯
-        document.querySelectorAll('.locked-card').forEach(el => {
-            el.addEventListener('click', () => {
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.locked-card')) {
                 alert(" [DATA_NOT_FOUND] // 暫無實體圖檔或憑證資料。 ");
-            });
+            }
         });
 
-        // 5. 動態星海與微光光暈背景引擎
+        // ==================== [ 核心動效：神經網絡數據粒子背景引擎 ] ====================
         const canvas = document.getElementById('space-canvas');
         const ctx = canvas.getContext('2d');
-        let stars = [];
+        
+        let particles = [];
         let meteors = [];
-        const maxStars = 110;
+        const mouse = { x: null, y: null, radius: 180 };
 
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
+        function resize() { 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
+        }
+        window.addEventListener('resize', resize); 
+        resize();
 
-        for (let i = 0; i < maxStars; i++) {
-            stars.push({
-                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                r: Math.random() * 1.3 + 0.3, opacity: Math.random() * 0.7 + 0.2,
-                factor: Math.random() * 0.015 + 0.005, increment: Math.random() > 0.5 ? 1 : -1
-            });
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.color = Math.random() > 0.4 ? 'rgba(0, 240, 255,' : 'rgba(255, 74, 154,';
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.fillStyle = this.color + this.alpha + ')';
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        let force = (mouse.radius - distance) / mouse.radius;
+                        let forceX = (dx / distance) * force * 1.2;
+                        let forceY = (dy / distance) * force * 1.2;
+                        this.x -= forceX;
+                        this.y -= forceY;
+                    }
+                }
+            }
+        }
+
+        const particleCount = Math.min(120, Math.floor((canvas.width * canvas.height) / 10000));
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
         }
 
         function createMeteor() {
             meteors.push({
-                x: Math.random() * canvas.width * 1.1, y: -30,
-                length: Math.random() * 110 + 60, speed: Math.random() * 5 + 3, opacity: 1
+                x: Math.random() * canvas.width * 1.2, y: -40,
+                length: Math.random() * 120 + 80, speed: Math.random() * 6 + 4, opacity: 1
             });
         }
-        setInterval(() => { if(meteors.length < 2) createMeteor(); }, Math.random() * 4000 + 2500);
+        setInterval(() => { if(meteors.length < 2) createMeteor(); }, Math.random() * 3000 + 2000);
 
         function drawBackgroundAnimation() {
-            ctx.fillStyle = 'rgba(6, 4, 9, 0.18)'; 
+            ctx.fillStyle = 'rgba(4, 2, 7, 0.22)'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            stars.forEach(star => {
-                star.opacity += star.factor * star.increment;
-                if (star.opacity > 0.85 || star.opacity < 0.15) star.increment *= -1;
-                ctx.beginPath(); ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2); ctx.fill();
-                
-                star.y += 0.04; star.x -= 0.015;
-                if (star.y > canvas.height) { star.y = 0; star.x = Math.random() * canvas.width; }
+            particles.forEach(p => {
+                p.update();
+                p.draw();
             });
 
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 115) {
+                        let linkAlpha = (1 - (dist / 115)) * 0.16;
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${linkAlpha})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
             meteors.forEach((meteor, index) => {
-                meteor.x -= meteor.speed; meteor.y += meteor.speed; meteor.opacity -= 0.012;
+                meteor.x -= meteor.speed; 
+                meteor.y += meteor.speed; 
+                meteor.opacity -= 0.015;
                 if (meteor.opacity <= 0) { meteors.splice(index, 1); return; }
                 
                 let gradient = ctx.createLinearGradient(meteor.x, meteor.y, meteor.x + meteor.length, meteor.y - meteor.length);
@@ -768,13 +989,49 @@
                 gradient.addColorStop(0.2, `rgba(255, 74, 154, ${meteor.opacity * 0.4})`);
                 gradient.addColorStop(1, 'rgba(0, 240, 255, 0)');
                 
-                ctx.beginPath(); ctx.strokeStyle = gradient; ctx.lineWidth = 1.8;
+                ctx.beginPath(); ctx.strokeStyle = gradient; ctx.lineWidth = 2;
                 ctx.moveTo(meteor.x, meteor.y); ctx.lineTo(meteor.x + meteor.length, meteor.y - meteor.length);
                 ctx.stroke();
             });
+
             requestAnimationFrame(drawBackgroundAnimation);
         }
         drawBackgroundAnimation();
+
+        // ==================== [ 核心優化二：全域高效滑鼠事件代理與即時同步準星 ] ====================
+        const cursorDot = document.getElementById('custom-cursor-dot');
+        const cursorTech = document.getElementById('custom-cursor-tech');
+
+        window.addEventListener('mousemove', (e) => {
+            const clientX = e.clientX;
+            const clientY = e.clientY;
+            
+            mouse.x = clientX;
+            mouse.y = clientY;
+
+            cursorDot.style.left = `${clientX}px`;
+            cursorDot.style.top = `${clientY}px`;
+            
+            cursorTech.style.left = `${clientX}px`;
+            cursorTech.style.top = `${clientY}px`;
+        });
+
+        // 改用全域高效率事件代理（Event Delegation），零盲區、極省效能且完全不需動態監聽節點變更
+        const interactiveSelectors = ['a', 'button', '.nav-btn', '.interactive-card', '.album-card', '.zoom-text', '.pill'];
+        
+        document.addEventListener('mouseover', (e) => {
+            const isInteractive = interactiveSelectors.some(selector => e.target.closest(selector));
+            if (isInteractive) {
+                document.body.classList.add('cursor-hover');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            const isInteractive = interactiveSelectors.some(selector => e.target.closest(selector));
+            if (isInteractive) {
+                document.body.classList.remove('cursor-hover');
+            }
+        });
     </script>
 </body>
 </html>
