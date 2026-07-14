@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>黃大恩 D.-E. Huang | 聯網終端</title>
-    <!-- 引入通用英數字體 Inter 與圖標 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -293,14 +292,12 @@
     <canvas id="space-canvas"></canvas>
     <div class="tech-overlay"></div>
 
-    <!-- 加載動畫 -->
     <div id="game-loader">
         <div class="loader-ring"></div>
         <div class="loader-text" id="loader-percent">LOADING CONNECTIONS // 0%</div>
         <div class="loader-progress"><div class="loader-bar" id="loader-bar"></div></div>
     </div>
 
-    <!-- 主要佈局 -->
     <div class="wrapper">
         <sidebar>
             <div class="sidebar-top">
@@ -320,7 +317,6 @@
         </sidebar>
 
         <main>
-            <!-- [分頁一：系統主頁] -->
             <div id="page-home" class="page-view active">
                 <div class="section-panel" style="padding: 45px; margin-bottom: 25px;">
                     <div style="display: flex; align-items: center; gap: 35px;">
@@ -356,20 +352,17 @@
                     </div>
                 </div>
 
-                <!-- 首頁生活/活動照片跑馬燈 -->
                 <div class="section-panel" style="padding: 20px;">
                     <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
                         FIELD_ACTIVITY_LOG // 活動紀錄 (點擊檢視大圖)
                     </div>
                     <div class="marquee-container">
                         <div class="marquee-track" id="home-marquee-track">
-                            <!-- 由 JavaScript 動態生成注入 -->
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>
 
-            <!-- [分頁二：專業憑證] -->
             <div id="page-certs" class="page-view">
                 <div class="section-panel" style="margin-bottom: 25px;">
                     <div class="panel-heading"><i class="fa-solid fa-id-card"></i> 數據集成憑證 <span>[CERTIFICATES]</span></div>
@@ -387,9 +380,9 @@
 
                     <div class="sub-panel-title"><i class="fa-solid fa-school"></i> 高中憑證 [HIGH_SCHOOL_LEVEL]</div>
                     <div class="list-container">
-                        <div class="interactive-card locked-card">
-                            <div><span>電腦軟體應用 乙級 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
-                            <i class="fa-solid fa-border-all"></i>
+                        <div class="interactive-card" data-img="./certificates/software_level_b.jpg">
+                            <div><span>電腦軟體應用 乙級</span></div>
+                            <i class="fa-solid fa-eye"></i>
                         </div>
                         <div class="interactive-card locked-card">
                             <div><span>APCS 專業檢定 3+3 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
@@ -398,7 +391,6 @@
                     </div>
                 </div>
 
-                <!-- 證照預覽跑馬燈 -->
                 <div class="section-panel" style="padding: 20px;">
                     <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
                         CREDENTIAL_PREVIEW_MATRIX // 憑證圖檔即時預覽 (點擊檢視大圖)
@@ -410,18 +402,19 @@
                             <div class="marquee-item" data-img="./certificates/gemini_std.png"><img src="./certificates/gemini_std.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Student'"></div>
                             <div class="marquee-item" data-img="./certificates/gemini_fac.png"><img src="./certificates/gemini_fac.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Faculty'"></div>
                             <div class="marquee-item" data-img="./certificates/jetson.png"><img src="./certificates/jetson.png" onerror="this.src='https://via.placeholder.com/240x180?text=Jetson+Nano'"></div>
+                            <div class="marquee-item" data-img="./certificates/software_level_b.jpg"><img src="./certificates/software_level_b.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Software+Level+B'"></div>
                             
                             <div class="marquee-item" data-img="./certificates/ipas.jpg"><img src="./certificates/ipas.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=iPAS'"></div>
                             <div class="marquee-item" data-img="./certificates/tqc.jpg"><img src="./certificates/tqc.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=TQC%2B+Python'"></div>
                             <div class="marquee-item" data-img="./certificates/gemini_std.png"><img src="./certificates/gemini_std.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Student'"></div>
                             <div class="marquee-item" data-img="./certificates/gemini_fac.png"><img src="./certificates/gemini_fac.png" onerror="this.src='https://via.placeholder.com/240x180?text=Gemini+Faculty'"></div>
                             <div class="marquee-item" data-img="./certificates/jetson.png"><img src="./certificates/jetson.png" onerror="this.src='https://via.placeholder.com/240x180?text=Jetson+Nano'"></div>
+                            <div class="marquee-item" data-img="./certificates/software_level_b.jpg"><img src="./certificates/software_level_b.jpg" onerror="this.src='https://via.placeholder.com/240x180?text=Software+Level+B'"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- [分頁三：競賽紀錄] -->
             <div id="page-comps" class="page-view">
                 <div class="section-panel" style="margin-bottom: 20px;">
                     <div class="panel-heading"><i class="fa-solid fa-trophy"></i> 歷年競賽紀錄 <span>[RECORDS]</span></div>
@@ -448,7 +441,6 @@
                     </div>
                 </div>
 
-                <!-- 競賽獎狀跑馬燈 -->
                 <div class="section-panel" style="padding: 20px;">
                     <div style="font-size: 0.8rem; color: var(--cyan-glow); font-family: 'Inter'; font-weight: 700; margin-bottom: 15px; letter-spacing: 2px;">
                         HONOR_CERTIFICATE_MATRIX // 競賽實體獎狀成果 (點擊檢視大圖)
@@ -471,7 +463,6 @@
                 </div>
             </div>
 
-            <!-- [分頁四：畢業專題] -->
             <div id="page-project" class="page-view">
                 <div class="section-panel" style="margin-bottom: 20px;">
                     <div class="panel-heading">
@@ -480,17 +471,17 @@
                     <div class="project-box" style="grid-template-columns: 1.1fr 0.9fr; gap: 30px; display: grid; align-items: start;">
                         <div>
                             <h3 style="font-size: 1.35rem; color: var(--cyan-glow); font-weight: 900;">
-                               智慧登山杖：結合 IMU 與 AI 疲勞監測的登山安全輔助系統
+                                智慧登山杖：結合 IMU 與 AI 疲勞監測的登山安全輔助系統
                             </h3>
                             <p style="color: var(--text-muted); margin-top: 12px; font-size: 0.92rem; line-height: 1.7; text-align: justify;">
-                                本專題實作完整的邊緣端機器學習與應急無線電偵測流程。研究涵蓋野外實地數據蒐集，建構逾 20 小時之真實高山步態時序資料庫；前處理階段導入去噪擴散機率模型（DDPM）執行高階數據增強，消弭樣本不平衡；藉由三軸加速度與三軸陀螺儀訊號進行時序特徵擷取。模型訓練階段採用輕量化門控循環單元（GRU）捕捉步態演變特徵，並於邊緣端推理架構整合 CORAL 演算法，實作無監督領域自適應校準，有效消弭跨使用者與地形差異之領域偏移。
+                                 本專題實作完整的邊緣端機器學習與應急無線電偵測流程。研究涵蓋野外實地數據蒐集，建構逾 20 小時之真實高山步態時序資料庫；前處理階段導入去噪擴散機率模型（DDPM）執行高階數據增強，消弭樣本不平衡；藉由三軸加速度與三軸陀螺儀訊號進行時序特徵擷取。模型訓練階段採用輕量化門控循環單元（GRU）捕捉步態演變特徵，並於邊緣端推理架構整合 CORAL 演算法，實作無監督領域自適應校準，有效消弭跨使用者與地形差異之領域偏移。
                             </p>
                             
-                            <div class="interactive-card locked-card" style="margin-top: 20px; width: 100%; max-width: 450px;">
+                            <div class="interactive-card" data-img="./certificates/project_award_2nd.jpg" style="margin-top: 20px; width: 100%; max-width: 450px;">
                                 <div>
-                                    <span style="font-weight:700;">2026 實務專題競賽 第二名 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span>
+                                    <span style="font-weight:700;">2026 實務專題競賽 第二名</span>
                                 </div>
-                                <i class="fa-solid fa-border-all"></i>
+                                <i class="fa-solid fa-eye"></i>
                             </div>
 
                             <div style="margin-top: 15px;">
@@ -521,7 +512,6 @@
                 </div>
             </div>
 
-            <!-- [分頁五：學術論文] -->
             <div id="page-papers" class="page-view">
                 <div class="section-panel">
                     <div class="panel-heading"><i class="fa-solid fa-scroll"></i> 投稿論文 <span>[ACADEMIC_PAPERS]</span></div>
@@ -560,7 +550,6 @@
                 </div>
             </div>
 
-            <!-- [分頁六：實地數據採集] -->
             <div id="page-hobbies" class="page-view">
                 <div class="section-panel">
                     <div class="panel-heading">
@@ -615,7 +604,6 @@
         </main>
     </div>
 
-    <!-- 媒體自適應內容燈箱 -->
     <div class="lightbox" id="gameLightbox">
         <div class="lightbox-wrapper">
             <button class="lightbox-close" id="closeLightbox"><i class="fa-solid fa-xmark"></i></button>
