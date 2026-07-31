@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="黃大恩的人工智慧研究與技術作品集，收錄智慧登山杖、時序資料分析、學術論文、全國競賽與專業證照。">
+    <meta name="author" content="黃大恩">
     <title>黃大恩 D.-E. Huang | 聯網終端</title>
     <!-- 引入通用英數字體 Inter 與圖標 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -389,6 +391,101 @@
             box-shadow: -3px 0 0px #EA4335, 0 8px 20px rgba(234, 67, 53, 0.05);
         }
 
+        /* 首頁研究履歷摘要 */
+        .profile-meta {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .profile-meta-item {
+            padding: 11px 14px;
+            border: 1px solid rgba(0, 240, 255, 0.12);
+            border-radius: 4px;
+            background: rgba(0, 240, 255, 0.025);
+            color: var(--text-muted);
+            font-size: 0.84rem;
+            line-height: 1.45;
+        }
+        .profile-meta-item strong {
+            display: block;
+            margin-top: 2px;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        .profile-meta-label {
+            color: var(--gold-accent);
+            font-family: monospace;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        }
+
+        /* 可驗證資訊與研究限制說明 */
+        .evidence-note {
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border-left: 3px solid var(--gold-accent);
+            background: rgba(255, 203, 107, 0.05);
+            color: var(--text-muted);
+            font-size: 0.86rem;
+            line-height: 1.65;
+        }
+        .evidence-note strong { color: #fff; }
+
+        /* 論文狀態與分工 */
+        .paper-card {
+            min-height: 112px;
+            height: auto !important;
+            align-items: flex-start;
+            gap: 20px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .paper-card-content { flex: 1; min-width: 0; }
+        .paper-title-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .paper-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 999px;
+            color: var(--cyan-glow);
+            background: rgba(0, 240, 255, 0.06);
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .paper-status.published {
+            border-color: rgba(255, 203, 107, 0.4);
+            color: var(--gold-accent);
+            background: rgba(255, 203, 107, 0.07);
+        }
+        .paper-subtitle {
+            color: var(--text-muted);
+            font-size: 0.84rem;
+            line-height: 1.5;
+        }
+        .paper-contribution {
+            margin-top: 7px;
+            color: #858095;
+            font-size: 0.78rem;
+            line-height: 1.5;
+        }
+        .paper-doi {
+            display: inline-block;
+            margin-top: 6px;
+            color: var(--gold-accent);
+            font-family: monospace;
+            font-size: 0.75rem;
+            overflow-wrap: anywhere;
+        }
+
         /* 字體懸停平滑放大動效 */
         .zoom-text {
             display: inline-block;
@@ -466,27 +563,37 @@
                         <img src="./assets/avatar.png" style="width: 120px; height: 120px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 0 15px rgba(255,255,255,0.05);" onerror="this.src='https://via.placeholder.com/120'">
                         <div style="flex-grow: 1;">
                             <h2 style="font-size: 2.4rem; font-weight: 900; letter-spacing: -0.5px;">
-                                <span class="zoom-text">黃大恩</span> 
-                                <span style="font-size: 0.82rem; background: var(--pink-accent); padding: 3px 8px; border-radius: 4px; margin-left: 10px; vertical-align: middle; font-weight: 700;">UID: 3B241085</span>
+                                <span class="zoom-text">黃大恩</span>
                             </h2>
                             <p style="color: var(--cyan-glow); font-weight: 700; font-size: 0.88rem; letter-spacing: 1.5px; margin-top: 6px; font-family: monospace;">WELCOME, BON VOYAGE.</p>
                             <p class="zoom-text" style="color: var(--text-muted); margin-top: 15px; font-size: 0.98rem; max-width: 750px; line-height: 1.6;">
                                 專注於人工智慧、機器學習與時序數據分析。擅長將演算法與硬體架構融合，打造具備前瞻性的物聯網智慧疲勞觀測與山域救援終端系統。
                             </p>
-                            
+
+                            <div class="profile-meta" aria-label="學術履歷摘要">
+                                <div class="profile-meta-item">
+                                    <span class="profile-meta-label">AFFILIATION</span>
+                                    <strong>國立勤益科技大學｜人工智慧應用工程系</strong>
+                                </div>
+                                <div class="profile-meta-item">
+                                    <span class="profile-meta-label">ACADEMIC RANK</span>
+                                    <strong>系排 12 / 79｜前 15.19%</strong>
+                                </div>
+                                <div class="profile-meta-item">
+                                    <span class="profile-meta-label">PUBLICATIONS</span>
+                                    <strong>4 篇論文已接受</strong>
+                                </div>
+                                <div class="profile-meta-item">
+                                    <span class="profile-meta-label">IEEE XPLORE</span>
+                                    <strong>IS3C 論文正式收錄</strong>
+                                </div>
+                            </div>
+
                             <!-- 聯絡方式協定連結區塊 -->
                             <div class="comm-grid">
-                                <a href="https://discord.com/users/827761908694253588" target="_blank" class="comm-link discord-link">
-                                    <i class="fa-brands fa-discord" style="color: #5865F2;"></i>
-                                    <span>DISCORD // iljkol</span>
-                                </a>
-                                <a href="https://line.me/ti/p/-UIACbC-bg" target="_blank" class="comm-link line-link">
-                                    <i class="fa-brands fa-line" style="color: #06C755;"></i>
-                                    <span>LINE // 恩</span>
-                                </a>
                                 <a href="mailto:a0901183567@gmail.com" class="comm-link gmail-link">
                                     <i class="fa-solid fa-envelope" style="color: #EA4335;"></i>
-                                    <span>GMAIL // a0901183567</span>
+                                    <span>EMAIL // a0901183567@gmail.com</span>
                                 </a>
                             </div>
                         </div>
@@ -578,24 +685,27 @@
             <div id="page-comps" class="page-view">
                 <div class="section-panel" style="margin-bottom: 20px;">
                     <div class="panel-heading"><i class="fa-solid fa-trophy"></i> 歷年競賽紀錄 <span>[RECORDS]</span></div>
+                    <div class="evidence-note">
+                        <strong>競賽層級：</strong>下列皆為全國性競賽，並以個人賽為主；團體組已於項目名稱中另行標示。參賽規模須以主辦單位公開名單為準，現階段不估填未經查證的人數。
+                    </div>
                     
                     <div class="sub-panel-title"><i class="fa-solid fa-graduation-cap"></i> 大學紀錄 [UNIVERSITY_LEVEL]</div>
                     <div class="list-container" style="grid-template-columns: 1fr; margin-bottom: 25px;">
-                        <div class="interactive-card" data-img="./certificates/race_2024.jpg"><span class="zoom-text">2024 程速勁賽 全國第一名</span><i class="fa-solid fa-crown" style="color:var(--gold-accent);"></i></div>
-                        <div class="interactive-card" data-img="./certificates/race_2024_prog.jpg"><span class="zoom-text">113年 (2024) 全國程式力競賽 第二名</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/race_2026_prog.jpg"><span class="zoom-text">115年 (2026) 全國程式力競賽 第二名</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/race_2025.png"><span class="zoom-text">2025 金象盃 全國第三名</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/race_2023.jpg"><span class="zoom-text">2023 金象盃 全國優勝</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/info_2023.jpg"><span class="zoom-text">2024 資訊月中區個人組 優勝</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2024.jpg"><span class="zoom-text">2024 程速勁賽（全國賽｜個人）第一名</span><i class="fa-solid fa-crown" style="color:var(--gold-accent);"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2024_prog.jpg"><span class="zoom-text">113年 (2024) 全國程式力競賽（個人）第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2026_prog.jpg"><span class="zoom-text">115年 (2026) 全國程式力競賽（個人）第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2025.png"><span class="zoom-text">2025 金象盃（全國賽｜個人）第三名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/race_2023.jpg"><span class="zoom-text">2023 金象盃（全國賽｜個人）優勝</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/info_2023.jpg"><span class="zoom-text">2024 資訊月資訊應用技能競賽（全國性｜中區個人組）優勝</span><i class="fa-solid fa-eye"></i></div>
                         <div class="interactive-card" data-img="./certificates/smart_2024.jpg"><span class="zoom-text">2024 全國智慧製造大數據分析競賽 入圍</span><i class="fa-solid fa-eye"></i></div>
                     </div>
 
                     <div class="sub-panel-title"><i class="fa-solid fa-school"></i> 高中紀錄 [HIGH_SCHOOL_LEVEL]</div>
                     <div class="list-container" style="grid-template-columns: 1fr;">
-                        <div class="interactive-card" data-img="./certificates/high_skills_2022.jpg"><span class="zoom-text">111年 (2022) 全國高級中等學校技藝競賽 程式設計 全國第18名</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/high_info_2022.jpg"><span class="zoom-text">111年 (2022) 資訊月中區團體組 第二名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/high_skills_2022.jpg"><span class="zoom-text">111年 (2022) 全國高級中等學校技藝競賽 程式設計（個人）全國第18名</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/high_info_2022.jpg"><span class="zoom-text">111年 (2022) 資訊月資訊應用技能競賽（全國性｜中區團體組）第二名</span><i class="fa-solid fa-eye"></i></div>
                         <div class="interactive-card locked-card">
-                            <div><span class="zoom-text">111年 (2022) 青年程式設計競賽 全國佳作 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
+                            <div><span class="zoom-text">111年 (2022) 青年程式設計競賽（全國賽｜個人）佳作 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
                             <i class="fa-solid fa-border-all"></i>
                         </div>
                     </div>
@@ -630,7 +740,7 @@
                                智慧登山杖：結合 IMU 與 AI 疲勞監測的登山安全輔助系統
                             </h3>
                             <p style="color: var(--text-muted); margin-top: 12px; font-size: 0.92rem; line-height: 1.7; text-align: justify;">
-                                 本專題實作完整的邊緣端機器學習與應急無線電偵測流程。研究涵蓋野外實地數據蒐集，建構逾 20 小時之真實高山步態時序資料庫；前處理階段導入去噪擴散機率模型（DDPM）執行高階數據增強，消弭樣本不平衡；藉由三軸加速度與三軸陀螺儀訊號進行時序特徵擷取。模型訓練階段採用輕量化門控循環單元（GRU）捕捉步態演變特徵，並於邊緣端推理架構整合 CORAL 演算法，實作無監督領域自適應校準，有效消弭跨使用者與地形差異之領域偏移。
+                                 本專題實作完整的邊緣端機器學習與應急無線電偵測流程。原始訓練資料由 2 名專題作者實地蒐集，建構逾 20 小時之真實高山步態時序資料庫；前處理階段導入去噪擴散機率模型（DDPM）執行高階數據增強，改善樣本不平衡；藉由三軸加速度與三軸陀螺儀訊號進行時序特徵擷取。模型訓練階段採用輕量化門控循環單元（GRU）捕捉步態演變特徵，並於邊緣端推理架構整合 CORAL 演算法，實作無監督領域自適應校準，以降低跨使用者與地形差異造成的領域偏移。
                             </p>
                             
                             <div class="interactive-card" data-img="./certificates/project_award_2nd.jpg" style="margin-top: 20px; width: 100%; max-width: 450px;">
@@ -652,10 +762,17 @@
                                 DATA_ANALYSIS_MATRIX // SYSTEM_METRICS
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem;">
+                                <div>• 原始數據採集者: <span style="color: var(--cyan-glow); font-weight: 700;">2 名作者</span></div>
+                                <div>• 跨主體測試者: <span style="color: var(--cyan-glow); font-weight: 700;">6 名</span></div>
+                                <div>• 具疲勞評估資料: <span style="color: var(--cyan-glow); font-weight: 700;">2 名測試者</span></div>
+                                <div>• 真實步態資料: <span style="color: var(--cyan-glow); font-weight: 700;">逾 20 小時</span></div>
                                 <div>• 數據採樣率: <span style="color: var(--cyan-glow); font-weight: 700;">160 Hz</span></div>
                                 <div>• 窗口切片長: <span style="color: var(--cyan-glow); font-weight: 700;">960 據點</span></div>
                                 <div>• 基準分類率: <span style="color: var(--cyan-glow); font-weight: 700;">97.49%</span></div>
                                 <div>• 域自適應率: <span style="color: var(--cyan-glow); font-weight: 700;">93.40%</span></div>
+                            </div>
+                            <div style="margin-top: 15px; padding-top: 13px; border-top: 1px solid rgba(255,255,255,0.08); color: #858095; font-size: 0.76rem; line-height: 1.6;">
+                                資料限制：6 名跨主體測試者中，4 名於測試期間未呈現明確疲勞狀態；因此，具備疲勞類別辨識參考價值的測試資料主要來自其餘 2 名。
                             </div>
                         </div>
                     </div>
@@ -671,36 +788,57 @@
             <!-- [分頁五：學術論文] -->
             <div id="page-papers" class="page-view">
                 <div class="section-panel">
-                    <div class="panel-heading"><i class="fa-solid fa-scroll"></i> 投稿論文 <span>[ACADEMIC_PAPERS]</span></div>
-                    
-                    <a href="https://ieeexplore.ieee.org/document/11131049" target="_blank" class="interactive-card" style="margin-bottom: 12px; height: 75px; text-decoration: none; color: inherit;">
-                        <div>
-                            <strong style="color:var(--cyan-glow);" class="zoom-text">IS3C</strong>
-                            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">Smart Hiking Stick with IMU & AI Fatigue Monitoring</p>
+                    <div class="panel-heading"><i class="fa-solid fa-scroll"></i> 已接受論文 <span>[ACCEPTED_PAPERS]</span></div>
+                    <div class="evidence-note">
+                        共 4 篇論文已獲接受；其中 IS3C 論文已正式收錄於 IEEE Xplore。除「ILT｜無線電搜救」外，其餘 3 篇皆以本人主責之 IMU 資料與疲勞辨識研究內容為主。
+                    </div>
+
+                    <a href="https://doi.org/10.1109/IS3C65361.2025.11131049" target="_blank" rel="noopener noreferrer" class="interactive-card paper-card" style="margin-bottom: 12px;">
+                        <div class="paper-card-content">
+                            <div class="paper-title-row">
+                                <strong style="color:var(--cyan-glow);" class="zoom-text">IS3C 2025</strong>
+                                <span class="paper-status">已接受</span>
+                                <span class="paper-status published">IEEE Xplore 已收錄</span>
+                            </div>
+                            <p class="paper-subtitle">Smart Hiking Stick with IMU &amp; AI Fatigue Monitoring</p>
+                            <p class="paper-contribution">主要研究分工：IMU 步態資料蒐集、疲勞辨識資料處理、模型訓練與實驗分析。</p>
+                            <span class="paper-doi">DOI: 10.1109/IS3C65361.2025.11131049</span>
                         </div>
                         <i class="fa-solid fa-arrow-up-right-from-square" style="color: var(--gold-accent); font-size: 0.9rem;"></i>
                     </a>
-                    
-                    <div class="interactive-card locked-card" style="margin-bottom: 12px; height: 75px; position: relative;">
-                        <div>
-                            <span style="font-weight:700; color:var(--text-muted);" class="zoom-text">iFuzzy <span style="font-size:0.75rem; color:#4e4a5c;">(暫無圖片資料)</span></span>
-                            <p style="font-size:0.85rem; color:#625e70; margin-top:2px;">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
+
+                    <div class="interactive-card paper-card" style="margin-bottom: 12px;">
+                        <div class="paper-card-content">
+                            <div class="paper-title-row">
+                                <strong style="color:var(--cyan-glow);" class="zoom-text">iFuzzy</strong>
+                                <span class="paper-status">已接受</span>
+                            </div>
+                            <p class="paper-subtitle">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
+                            <p class="paper-contribution">主要研究分工：時序資料前處理、資料增強、疲勞辨識模型與消融實驗。</p>
                         </div>
-                        <i class="fa-solid fa-border-all" style="font-size: 0.95rem;"></i>
+                        <i class="fa-solid fa-circle-check"></i>
                     </div>
-                    
-                    <div class="interactive-card" data-img="./certificates/ilt_hike.jpg" style="margin-bottom: 12px; height: 75px;">
-                        <div>
-                            <strong style="color:var(--cyan-glow);" class="zoom-text">ILT // 智能姿態監測</strong>
-                            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
+
+                    <div class="interactive-card paper-card" data-img="./certificates/ilt_hike.jpg" style="margin-bottom: 12px;">
+                        <div class="paper-card-content">
+                            <div class="paper-title-row">
+                                <strong style="color:var(--cyan-glow);" class="zoom-text">ILT｜智能姿態監測</strong>
+                                <span class="paper-status">已接受</span>
+                            </div>
+                            <p class="paper-subtitle">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
+                            <p class="paper-contribution">主要研究分工：IMU 姿態與步態資料分析、疲勞模型設計及跨使用者驗證。</p>
                         </div>
                         <i class="fa-solid fa-file-lines"></i>
                     </div>
-                    
-                    <div class="interactive-card" data-img="./certificates/ilt_sdr.jpg" style="height: 75px;">
-                        <div>
-                            <strong style="color:var(--cyan-glow);" class="zoom-text">ILT // 無線電搜救</strong>
-                            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">應用於山域搜救之軟體定義無線電頻率自動偵測與主動求救系統</p>
+
+                    <div class="interactive-card paper-card" data-img="./certificates/ilt_sdr.jpg">
+                        <div class="paper-card-content">
+                            <div class="paper-title-row">
+                                <strong style="color:var(--cyan-glow);" class="zoom-text">ILT｜無線電搜救</strong>
+                                <span class="paper-status">已接受</span>
+                            </div>
+                            <p class="paper-subtitle">應用於山域搜救之軟體定義無線電頻率自動偵測與主動求救系統</p>
+                            <p class="paper-contribution">研究分工：參與無線電辨識模型之整體架構設計。</p>
                         </div>
                         <i class="fa-solid fa-file-lines"></i>
                     </div>
@@ -714,7 +852,7 @@
                         <i class="fa-solid fa-compass"></i> 實地數據採集 <span>[FIELD_RESEARCH]</span>
                     </div>
                     <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; line-height: 1.7; text-align: justify;">
-                        本研究為檢驗步態疲勞演算法與無線電傳導模型之泛化能力，由研究團隊實地進行山域外測攀登。採集範疇涵蓋不同異質受試者之步態軌跡，並針對極端坡度、高海拔低壓環境、石階以及高飽和濃霧等複雜氣候與地貌，開展實地數據採集與邊緣端模型校準之研究足跡：
+                        本研究為檢驗步態疲勞演算法與無線電傳導模型之泛化能力，由 2 名專題作者實地進行原始步態資料蒐集，另邀請 6 名測試者進行跨主體測試。由於其中 4 名測試者於測試期間未呈現明確疲勞狀態，具備疲勞類別辨識參考價值的跨主體資料主要來自其餘 2 名。外測場域涵蓋坡地、石階、高海拔與濃霧等不同環境：
                     </p>
                     
                     <div class="album-grid">
