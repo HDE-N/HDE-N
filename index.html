@@ -485,6 +485,40 @@
             font-size: 0.75rem;
             overflow-wrap: anywhere;
         }
+        .paper-authors {
+            margin-top: 7px;
+            color: #d8d4e3;
+            font-size: 0.8rem;
+            line-height: 1.55;
+        }
+        .paper-authors strong { color: var(--gold-accent); }
+
+        /* 學歷與成果層級 */
+        .education-card {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+        .education-period {
+            color: var(--cyan-glow);
+            font-family: monospace;
+            font-size: 0.82rem;
+            letter-spacing: 1px;
+        }
+        .credential-featured {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .credential-featured .interactive-card {
+            min-height: 92px;
+            border-color: rgba(0, 240, 255, 0.2);
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.07), rgba(255, 74, 154, 0.025));
+        }
+        .credential-title { color: #fff; font-weight: 800; font-size: 1rem; }
+        .credential-note { color: var(--text-muted); font-size: 0.75rem; margin-top: 6px; line-height: 1.45; }
 
         /* 字體懸停平滑放大動效 */
         .zoom-text {
@@ -517,6 +551,57 @@
             border-color: var(--cyan-glow);
             background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), transparent);
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        /* 手機與平板版 */
+        @media (max-width: 900px) {
+            body { overflow: auto; cursor: auto; }
+            #custom-cursor-dot, #custom-cursor-tech { display: none; }
+            .wrapper { min-height: 100vh; height: auto; flex-direction: column; }
+            sidebar {
+                width: 100%; height: auto; padding: 14px 0 8px; position: sticky; top: 0;
+                border-right: 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+                box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+            }
+            .sidebar-top { padding: 0 14px; }
+            .site-title { margin: 0 0 10px; font-size: 1rem; }
+            .site-title::after, sidebar > div:last-child { display: none; }
+            .nav-links { flex-direction: row; overflow-x: auto; gap: 5px; padding-bottom: 3px; scrollbar-width: thin; }
+            .nav-btn {
+                flex: 0 0 auto; padding: 10px 12px; border-left: 0; border-bottom: 2px solid transparent;
+                border-radius: 6px; font-size: 0.8rem; gap: 7px; white-space: nowrap;
+            }
+            .nav-btn:hover, .nav-btn.active { border-left-color: transparent; border-bottom-color: var(--cyan-glow); }
+            main { width: 100%; height: auto; min-height: 0; overflow: visible; padding: 22px 14px 40px; }
+            .section-panel { padding: 22px; margin-bottom: 18px; }
+            .section-panel:hover { transform: none; }
+            .panel-heading { font-size: 1.28rem; letter-spacing: 1px; gap: 9px; }
+            .panel-heading span { display: none; }
+            .home-profile { flex-direction: column; gap: 20px !important; }
+            .profile-meta, .credential-featured { grid-template-columns: 1fr; }
+            .home-two-column, .project-box { grid-template-columns: 1fr !important; }
+            .education-card { grid-template-columns: 1fr; gap: 8px; }
+            .list-container, .album-grid { grid-template-columns: 1fr; }
+            .paper-card { padding: 16px; }
+            .interactive-card:hover { transform: none; padding-left: 22px; }
+            .project-report-viewer { height: 70vh !important; }
+            #lightbox-media-box iframe { width: 92vw; height: 78vh; }
+            .lightbox-wrapper { max-width: 96%; max-height: 90%; }
+        }
+
+        @media (max-width: 520px) {
+            .nav-btn i { display: none; }
+            main { padding-left: 10px; padding-right: 10px; }
+            .section-panel { padding: 18px 16px; }
+            .hero-panel { padding: 24px 18px !important; }
+            .hero-panel h2 { font-size: 2rem !important; }
+            .profile-meta { grid-template-columns: 1fr; }
+            .comm-link { padding: 12px 14px; font-size: 0.78rem; overflow-wrap: anywhere; }
+            .paper-title-row { align-items: flex-start; }
+            .paper-card > i { display: none; }
+            .project-metrics { grid-template-columns: 1fr !important; }
+            .project-report-viewer { height: 62vh !important; }
+            footer { padding-bottom: 10px !important; }
         }
     </style>
 </head>
@@ -558,8 +643,8 @@
         <main>
             <!-- [分頁一：系統主頁] -->
             <div id="page-home" class="page-view active">
-                <div class="section-panel" style="padding: 45px; margin-bottom: 25px;">
-                    <div style="display: flex; align-items: start; gap: 35px;">
+                <div class="section-panel hero-panel" style="padding: 45px; margin-bottom: 25px;">
+                    <div class="home-profile" style="display: flex; align-items: start; gap: 35px;">
                         <img src="./assets/avatar.png" style="width: 120px; height: 120px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 0 15px rgba(255,255,255,0.05);" onerror="this.src='https://via.placeholder.com/120'">
                         <div style="flex-grow: 1;">
                             <h2 style="font-size: 2.4rem; font-weight: 900; letter-spacing: -0.5px;">
@@ -595,11 +680,15 @@
                                     <i class="fa-solid fa-envelope" style="color: #EA4335;"></i>
                                     <span>EMAIL // a0901183567@gmail.com</span>
                                 </a>
+                                <a href="https://github.com/HDE-N" target="_blank" rel="noopener noreferrer" class="comm-link">
+                                    <i class="fa-brands fa-github"></i>
+                                    <span>GITHUB // 網站原始碼與託管</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1.2fr 1.2fr; gap: 25px; margin-bottom: 25px;">
+                <div class="home-two-column" style="display: grid; grid-template-columns: 1.2fr 1.2fr; gap: 25px; margin-bottom: 25px;">
                     <div class="section-panel" style="margin-bottom: 0;">
                         <div class="panel-heading"><i class="fa-solid fa-square-poll-horizontal"></i> 專業 <span>[MATRICES]</span></div>
                         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -617,6 +706,18 @@
                             <div class="interactive-card" data-img="./certificates/scholarship.jpg">
                                 <span class="zoom-text">青永勤學愛校學生獎助學金</span> <i class="fa-solid fa-eye"></i>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-panel">
+                    <div class="panel-heading"><i class="fa-solid fa-user-graduate"></i> 學歷 <span>[EDUCATION]</span></div>
+                    <div class="education-card">
+                        <div class="education-period">學士班在學</div>
+                        <div>
+                            <h3 style="font-size:1.1rem; color:#fff; margin-bottom:7px;">國立勤益科技大學｜人工智慧應用工程系</h3>
+                            <p style="color:var(--text-muted); line-height:1.65; font-size:0.9rem;">學士學位課程｜系排 12 / 79（前 15.19%）</p>
+                            <p style="color:#858095; line-height:1.6; font-size:0.78rem; margin-top:6px;">研究重點：時序訊號分析、機器學習、電腦視覺、Edge AI 與軟硬體整合。</p>
                         </div>
                     </div>
                 </div>
@@ -639,27 +740,33 @@
                 <div class="section-panel" style="margin-bottom: 25px;">
                     <div class="panel-heading"><i class="fa-solid fa-id-card"></i> 數據集成憑證 <span>[CERTIFICATES]</span></div>
                     
-                    <div class="sub-panel-title"><i class="fa-solid fa-graduation-cap"></i> 大學憑證 [UNIVERSITY_LEVEL]</div>
+                    <div class="sub-panel-title"><i class="fa-solid fa-bolt"></i> 核心能力成果 [CORE_ACHIEVEMENTS]</div>
+                    <div class="credential-featured">
+                        <div class="interactive-card" data-img="./certificates/cpe.png">
+                            <div><div class="credential-title zoom-text">CPE 單次 4 題</div><div class="credential-note">程式設計與演算法實作能力</div></div><i class="fa-solid fa-code"></i>
+                        </div>
+                        <div class="interactive-card" data-img="./certificates/ipas.jpg">
+                            <div><div class="credential-title zoom-text">iPAS AI 應用規劃師｜中級</div><div class="credential-note">經濟部產業人才能力鑑定</div></div><i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div class="interactive-card locked-card">
+                            <div><div class="credential-title zoom-text">APCS 觀念 3／實作 3</div><div class="credential-note">程式設計能力檢測｜暫無圖片資料</div></div><i class="fa-solid fa-terminal"></i>
+                        </div>
+                        <div class="interactive-card" data-img="./certificates/software_level_b.jpg">
+                            <div><div class="credential-title zoom-text">電腦軟體應用｜乙級</div><div class="credential-note">勞動部技術士證</div></div><i class="fa-solid fa-certificate"></i>
+                        </div>
+                    </div>
+
+                    <div class="sub-panel-title"><i class="fa-solid fa-graduation-cap"></i> 專業證照與研習 [PROFESSIONAL]</div>
                     <div class="list-container" style="margin-bottom: 25px;">
-                        <div class="interactive-card" data-img="./certificates/cpe.png"><span class="zoom-text">CPE 4題</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/ipas.jpg"><span class="zoom-text">iPAS AI應用規劃師 中級</span><i class="fa-solid fa-eye"></i></div>
                         <div class="interactive-card" data-img="./certificates/tqc.jpg"><span class="zoom-text">TQC+ Python3 第二版</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/gemini_std.png"><span class="zoom-text">Gemini Certified Student</span><i class="fa-solid fa-eye"></i></div>
-                        <div class="interactive-card" data-img="./certificates/gemini_fac.png"><span class="zoom-text">Gemini Certified Faculty</span><i class="fa-solid fa-eye"></i></div>
                         <div class="interactive-card" data-img="./certificates/jetson.png"><span class="zoom-text">AI on Jetson Nano 結業</span><i class="fa-solid fa-eye"></i></div>
                         <div class="interactive-card" data-img="./certificates/radio.jpg"><span class="zoom-text">三等業餘無線電執照</span><i class="fa-solid fa-eye"></i></div>
                     </div>
 
-                    <div class="sub-panel-title"><i class="fa-solid fa-school"></i> 高中憑證 [HIGH_SCHOOL_LEVEL]</div>
+                    <div class="sub-panel-title"><i class="fa-solid fa-layer-group"></i> 補充學習紀錄 [SUPPLEMENTARY]</div>
                     <div class="list-container">
-                        <div class="interactive-card" data-img="./certificates/software_level_b.jpg">
-                            <div><span class="zoom-text">電腦軟體應用 乙級</span></div>
-                            <i class="fa-solid fa-eye"></i>
-                        </div>
-                        <div class="interactive-card locked-card">
-                            <div><span class="zoom-text">APCS 3+3 <span style="font-size:0.75rem; color:#858095;">(暫無圖片資料)</span></span></div>
-                            <i class="fa-solid fa-border-all"></i>
-                        </div>
+                        <div class="interactive-card" data-img="./certificates/gemini_std.png"><span class="zoom-text">Gemini Certified Student</span><i class="fa-solid fa-eye"></i></div>
+                        <div class="interactive-card" data-img="./certificates/gemini_fac.png"><span class="zoom-text">Gemini Certified Faculty</span><i class="fa-solid fa-eye"></i></div>
                     </div>
                 </div>
 
@@ -761,15 +868,17 @@
                             <div style="font-size: 0.75rem; color: var(--gold-accent); font-family: monospace; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px;">
                                 DATA_ANALYSIS_MATRIX // SYSTEM_METRICS
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem;">
+                            <div class="project-metrics" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem;">
                                 <div>• 原始數據採集者: <span style="color: var(--cyan-glow); font-weight: 700;">2 名作者</span></div>
                                 <div>• 跨主體測試者: <span style="color: var(--cyan-glow); font-weight: 700;">6 名</span></div>
                                 <div>• 具疲勞評估資料: <span style="color: var(--cyan-glow); font-weight: 700;">2 名測試者</span></div>
                                 <div>• 真實步態資料: <span style="color: var(--cyan-glow); font-weight: 700;">逾 20 小時</span></div>
                                 <div>• 數據採樣率: <span style="color: var(--cyan-glow); font-weight: 700;">160 Hz</span></div>
                                 <div>• 窗口切片長: <span style="color: var(--cyan-glow); font-weight: 700;">960 據點</span></div>
-                                <div>• 基準分類率: <span style="color: var(--cyan-glow); font-weight: 700;">97.49%</span></div>
-                                <div>• 域自適應率: <span style="color: var(--cyan-glow); font-weight: 700;">93.40%</span></div>
+                                <div>• 源域 5 折平均 Accuracy: <span style="color: var(--cyan-glow); font-weight: 700;">97.63%</span></div>
+                                <div>• 跨使用者完整校準 Accuracy: <span style="color: var(--cyan-glow); font-weight: 700;">93.40%</span></div>
+                                <div>• 源域 5 折平均 Macro F1: <span style="color: var(--cyan-glow); font-weight: 700;">96.77%</span></div>
+                                <div>• 跨使用者校準 Macro F1: <span style="color: var(--cyan-glow); font-weight: 700;">89.50%</span></div>
                             </div>
                             <div style="margin-top: 15px; padding-top: 13px; border-top: 1px solid rgba(255,255,255,0.08); color: #858095; font-size: 0.76rem; line-height: 1.6;">
                                 資料限制：6 名跨主體測試者中，4 名於測試期間未呈現明確疲勞狀態；因此，具備疲勞類別辨識參考價值的測試資料主要來自其餘 2 名。
@@ -778,7 +887,7 @@
                     </div>
                 </div>
 
-                <div class="section-panel" style="padding: 10px; height: 62vh; box-shadow: inset 0 0 20px rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.03);">
+                <div class="section-panel project-report-viewer" style="padding: 10px; height: 62vh; box-shadow: inset 0 0 20px rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.03);">
                     <div style="width: 100%; height: 100%; background: #100e1a; border-radius: 4px; overflow: hidden; border: 1px solid rgba(0, 240, 255, 0.15);">
                         <iframe src="./certificates/paper.pdf#toolbar=1&navpanes=0&scrollbar=1" style="width: 100%; height: 100%; border: none; background: #ffffff;"></iframe>
                     </div>
@@ -790,7 +899,7 @@
                 <div class="section-panel">
                     <div class="panel-heading"><i class="fa-solid fa-scroll"></i> 已接受論文 <span>[ACCEPTED_PAPERS]</span></div>
                     <div class="evidence-note">
-                        共 4 篇論文已獲接受；其中 IS3C 論文已正式收錄於 IEEE Xplore。除「ILT｜無線電搜救」外，其餘 3 篇皆以本人主責之 IMU 資料與疲勞辨識研究內容為主。
+                        共 4 篇論文已獲接受；其中 IS3C 論文已正式收錄於 IEEE Xplore。本人為 IS3C、iFuzzy 與 ILT「智能姿態監測」第一作者，為 ILT「無線電搜救」第三作者。
                     </div>
 
                     <a href="https://doi.org/10.1109/IS3C65361.2025.11131049" target="_blank" rel="noopener noreferrer" class="interactive-card paper-card" style="margin-bottom: 12px;">
@@ -801,6 +910,7 @@
                                 <span class="paper-status published">IEEE Xplore 已收錄</span>
                             </div>
                             <p class="paper-subtitle">Smart Hiking Stick with IMU &amp; AI Fatigue Monitoring</p>
+                            <p class="paper-authors"><strong>第一作者</strong>｜黃大恩、趙右詮、張祐霖、劉秉睿</p>
                             <p class="paper-contribution">主要研究分工：IMU 步態資料蒐集、疲勞辨識資料處理、模型訓練與實驗分析。</p>
                             <span class="paper-doi">DOI: 10.1109/IS3C65361.2025.11131049</span>
                         </div>
@@ -814,6 +924,7 @@
                                 <span class="paper-status">已接受</span>
                             </div>
                             <p class="paper-subtitle">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
+                            <p class="paper-authors"><strong>第一作者</strong>｜黃大恩、劉秉睿、趙右詮、張祐霖</p>
                             <p class="paper-contribution">主要研究分工：時序資料前處理、資料增強、疲勞辨識模型與消融實驗。</p>
                         </div>
                         <i class="fa-solid fa-circle-check"></i>
@@ -826,6 +937,7 @@
                                 <span class="paper-status">已接受</span>
                             </div>
                             <p class="paper-subtitle">搭載 IMU 的智慧登山杖與 AI 疲勞監測系統</p>
+                            <p class="paper-authors"><strong>第一作者</strong>｜黃大恩、劉秉睿、趙右詮</p>
                             <p class="paper-contribution">主要研究分工：IMU 姿態與步態資料分析、疲勞模型設計及跨使用者驗證。</p>
                         </div>
                         <i class="fa-solid fa-file-lines"></i>
@@ -838,6 +950,7 @@
                                 <span class="paper-status">已接受</span>
                             </div>
                             <p class="paper-subtitle">應用於山域搜救之軟體定義無線電頻率自動偵測與主動求救系統</p>
+                            <p class="paper-authors"><strong>第三作者</strong>｜趙右詮、劉秉睿、黃大恩</p>
                             <p class="paper-contribution">研究分工：參與無線電辨識模型之整體架構設計。</p>
                         </div>
                         <i class="fa-solid fa-file-lines"></i>
