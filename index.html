@@ -420,6 +420,24 @@
             letter-spacing: 1px;
         }
 
+        /* 首頁自我介紹 */
+        .bio-panel { padding: 30px 34px; }
+        .bio-lead {
+            color: var(--cyan-glow);
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+        .bio-copy {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.9;
+            text-align: justify;
+        }
+        .bio-copy + .bio-copy { margin-top: 14px; }
+        .bio-copy strong { color: #fff; font-weight: 700; }
+
         /* 可驗證資訊與研究限制說明 */
         .evidence-note {
             margin-bottom: 18px;
@@ -585,6 +603,7 @@
             .home-profile { flex-direction: column; gap: 20px !important; }
             .profile-meta, .credential-featured { grid-template-columns: 1fr; }
             .home-two-column, .project-box { grid-template-columns: 1fr !important; }
+            .bio-panel { padding: 24px; }
             .education-card { grid-template-columns: 1fr; gap: 8px; }
             .list-container, .album-grid { grid-template-columns: 1fr; }
             .paper-card { padding: 16px; }
@@ -601,6 +620,7 @@
             .hero-panel { padding: 24px 18px !important; }
             .hero-panel h2 { font-size: 2rem !important; }
             .profile-meta { grid-template-columns: 1fr; }
+            .bio-panel { padding: 21px 18px; }
             .comm-link { padding: 12px 14px; font-size: 0.78rem; overflow-wrap: anywhere; }
             .paper-title-row { align-items: flex-start; }
             .paper-card > i { display: none; }
@@ -650,7 +670,7 @@
             <div id="page-home" class="page-view active">
                 <div class="section-panel hero-panel" style="padding: 45px; margin-bottom: 25px;">
                     <div class="home-profile" style="display: flex; align-items: start; gap: 35px;">
-                        <img src="./assets/avatar.png" style="width: 120px; height: 120px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 0 15px rgba(255,255,255,0.05);" onerror="this.src='https://via.placeholder.com/120'">
+                        <img src="./assets/avatar.jpg" style="width: 120px; height: 120px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 0 15px rgba(255,255,255,0.05);" onerror="this.src='https://via.placeholder.com/120'">
                         <div style="flex-grow: 1;">
                             <h2 style="font-size: 2.4rem; font-weight: 900; letter-spacing: -0.5px;">
                                 <span class="zoom-text">黃大恩</span>
@@ -712,6 +732,15 @@
                         </div>
                     </div>
                 </div>
+
+                <section class="section-panel bio-panel" aria-labelledby="about-me-heading">
+                    <div class="panel-heading" id="about-me-heading"><i class="fa-solid fa-user"></i> 自我介紹 <span>[ABOUT_ME]</span></div>
+                    <!-- <p class="bio-lead">從資料與演算法出發，打造能在真實世界運作的 AI 系統。</p> -->
+                    <p class="bio-copy">我是黃大恩，目前就讀國立勤益科技大學人工智慧應用工程系，系排名 12／79（前 15.19%）。我對程式設計的興趣始於高中 Python 課程；透過持續練習與參與競賽，我逐步建立資料結構與演算法基礎，並於<strong> 全國高級中等學校技藝競賽程式設計職種獲全國第 18 名 </strong>，透過技優入學進入國立勤益科技大學。高中接觸基礎 AI 影像辨識應用後，我開始對讓程式理解資料、解決真實問題產生濃厚興趣。</p>
+                    <p class="bio-copy">對我而言，收穫最多的一段經驗是大一升大二暑假參加的<strong> 2024 年全國智慧製造大數據分析競賽 </strong>。這是我第一次真正面對產業資料，嘗試從資料分布與趨勢分析出發，建立溫度曲線預測與瑕疵分類模型。從線性擬合、Weibull 與 log-logistic 曲線，到後續的深度學習模型，我在不斷調整方法、檢視誤差的過程中，理解到完成 AI 任務不只是選擇模型，更需要理解資料、設計合適的實驗流程，並在有限資源下做出合理取捨。</p>
+                    <p class="bio-copy">大學期間，我以「智慧登山杖：結合 IMU 與 AI 疲勞監測的登山安全輔助系統」為核心專題，結合感測器資料、手機 App、深度學習模型與無線電求救機制，嘗試建立能實際應用於山域安全的智慧系統。我主要<strong> 負責原始資料蒐集、資料清理與增強、模型訓練、實驗設計及跨使用者驗證 </strong>。由於相關公開資料有限，專題資料皆由團隊與受試者實地蒐集；在反覆登山、測試與修正的過程中，我更加理解資料品質、泛化能力與部署可行性對 AI 系統的重要性。</p>
+                    <p class="bio-copy">這段研究經驗促使我完成四篇已接受論文，其中 IS3C 2025、iFuzzy 2025 與 ILT「智能姿態監測」為第一作者，ILT「無線電搜救」為第三作者。未來，我希望持續深耕人工智慧、時序訊號分析、電腦視覺與 Edge AI，並在研究所階段建立更扎實的資訊工程基礎，將資料分析、演算法與系統整合能力，轉化為能在真實環境中穩定運作的智慧應用。</p>
+                </section>
 
                 <div class="section-panel">
                     <div class="panel-heading"><i class="fa-solid fa-user-graduate"></i> 學歷 <span>[EDUCATION]</span></div>
