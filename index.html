@@ -576,6 +576,12 @@
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
         }
 
+        /* 畢業專題：核心重點統一標示 */
+        .project-key {
+            color: var(--cyan-glow);
+            font-weight: 800;
+        }
+
         /* 手機與平板版 */
         @media (max-width: 900px) {
             body { overflow: auto; cursor: auto; }
@@ -884,16 +890,47 @@
                     <div class="panel-heading">
                         <i class="fa-solid fa-cubes"></i> 大學畢業專題成果 <span>[GRADUATION_PROJECT]</span>
                     </div>
-                    <div class="project-box" style="grid-template-columns: 1.1fr 0.9fr; gap: 30px; display: grid; align-items: start;">
+                    <div class="project-box" style="grid-template-columns: 1fr; gap: 24px; display: grid; align-items: start;">
                         <div>
                             <h3 class="zoom-text" style="font-size: 1.35rem; color: var(--cyan-glow); font-weight: 900;">
                                智慧登山杖：結合 IMU 與 AI 疲勞監測的登山安全輔助系統
                             </h3>
-                            <p style="color: var(--text-muted); margin-top: 12px; font-size: 0.92rem; line-height: 1.7; text-align: justify;">
-                                 本專題實作完整的邊緣端機器學習與應急無線電偵測流程。原始訓練資料由 2 名專題作者實地蒐集，建構逾 20 小時之真實高山步態時序資料庫；前處理階段導入去噪擴散機率模型（DDPM）執行高階數據增強，改善樣本不平衡；藉由三軸加速度與三軸陀螺儀訊號進行時序特徵擷取。模型訓練階段採用輕量化門控循環單元（GRU）捕捉步態演變特徵，並於邊緣端推理架構整合 CORAL 演算法，實作無監督領域自適應校準，以降低跨使用者與地形差異造成的領域偏移。
+
+                            <div class="sub-panel-title" style="margin-top: 24px;">
+                                <i class="fa-solid fa-file-lines"></i> 專題摘要 [PROJECT_SUMMARY]
+                            </div>
+                            <p style="color: var(--text-muted); margin-top: 12px; font-size: 0.92rem; line-height: 1.85; text-align: justify;">
+                                本研究開發「結合 IMU 與 AI 疲勞監測之登山安全輔助系統」，將六軸慣性感測器整合至單一登山杖，透過真實山域步態資料蒐集、時序訊號分析與擴散模型資料增強，建立以 <strong class="project-key">GRU 疲勞辨識模型與 CORAL 領域自適應</strong>為核心的辨識流程，降低不同使用者與地形條件造成的資料分布差異。系統同時整合<strong class="project-key">軟體定義無線電（SDR）與 2D CNN 音訊辨識</strong>，用於偵測微弱求救訊號；最終將<strong class="project-key">疲勞預警、緊急通訊與行動端推論整合至手機應用程式</strong>，形成兼具事前預警與災後救援能力的登山安全輔助系統。
                             </p>
-                            
-                            <div class="interactive-card" data-img="./certificates/project_award_2nd.jpg" style="margin-top: 20px; width: 100%; max-width: 450px;">
+
+                            <div class="sub-panel-title" style="margin-top: 30px;">
+                                <i class="fa-solid fa-user-gear"></i> 我的主要負責內容 [MY_CONTRIBUTION]
+                            </div>
+
+                            <div style="display: grid; gap: 14px; margin-top: 14px;">
+                                <div style="padding: 18px 20px; border: 1px solid rgba(0, 240, 255, 0.16); border-left: 3px solid var(--cyan-glow); border-radius: 4px; background: rgba(0, 240, 255, 0.025);">
+                                    <div style="color: var(--cyan-glow); font-family: monospace; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px;">
+                                        01 // FATIGUE_RECOGNITION_PIPELINE
+                                    </div>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.8; text-align: justify;">
+                                        我負責<strong class="project-key">疲勞辨識子系統的完整研發流程</strong>，包含原始 IMU 資料蒐集、資料清理與特徵工程、步態分析、資料增強、模型訓練、超參數搜尋，以及跨使用者領域自適應。前期先透過步態週期與訊號變化分析評估合適的資料採樣率與單一視窗長度，再進入模型訓練；資料增強階段曾嘗試 AAE，但生成結果的擬合與穩定性不足，最終改採<strong class="project-key">擴散式去噪模型</strong>進行資料生成與增強。
+                                    </p>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.8; text-align: justify; margin-top: 9px;">
+                                        模型方面曾比較 LSTM、Transformer 與 GRU。雖然前兩者同樣能取得良好辨識結果，但考量最終需部署至手機端，其計算量與推論成本較高，因此經多組參數實驗後，最終採用<strong class="project-key">3 層、hidden size 16 的輕量 GRU；2019 年手機單次推論約 120 ms</strong>。再進一步縮小模型時會出現明顯欠擬合與準確率下降，因此此組參數是辨識能力與行動端部署成本之間的折衷。跨使用者部分則導入<strong class="project-key">CORAL 無監督領域自適應</strong>，以降低不同使用者步態與地形差異造成的 domain shift。
+                                    </p>
+                                </div>
+
+                                <div style="padding: 18px 20px; border: 1px solid rgba(0, 240, 255, 0.16); border-left: 3px solid var(--cyan-glow); border-radius: 4px; background: rgba(0, 240, 255, 0.025);">
+                                    <div style="color: var(--cyan-glow); font-family: monospace; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px;">
+                                        02 // SDR_EMERGENCY_COMMUNICATION
+                                    </div>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.8; text-align: justify;">
+                                        SDR 緊急通訊救援系統的無線電音訊資料由團隊共同進行實地蒐集；其中我主要負責<strong class="project-key">無線電端訊號發送與實地測試</strong>，並為此<strong class="project-key">取得三等業餘無線電執照並申請電台</strong>。實地取得的音訊資料後續提供給 2D CNN 辨識模型使用，用以訓練系統辨識弱訊號環境中的求救內容，驗證山域通訊盲區下的緊急通訊應用可行性。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="interactive-card" data-img="./certificates/project_award_2nd.jpg" style="margin-top: 22px; width: 100%; max-width: 450px;">
                                 <div>
                                     <span class="zoom-text" style="font-weight:700;">2026 實務專題競賽 第二名</span>
                                 </div>
@@ -904,27 +941,6 @@
                                 <a href="https://canva.link/896a69o39vo41rr" target="_blank" class="btn-game" style="margin-top: 10px;">
                                     <i class="fa-solid fa-file-powerpoint"></i> 線上簡報 (Canva)
                                 </a>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(0, 240, 255, 0.15); padding: 18px; border-radius: 4px; box-shadow: 0 0 15px rgba(0,240,255,0.02); position: relative;">
-                            <div style="font-size: 0.75rem; color: var(--gold-accent); font-family: monospace; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px;">
-                                DATA_ANALYSIS_MATRIX // SYSTEM_METRICS
-                            </div>
-                            <div class="project-metrics" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem;">
-                                <div>• 原始數據採集者: <span style="color: var(--cyan-glow); font-weight: 700;">2 名作者</span></div>
-                                <div>• 跨主體測試者: <span style="color: var(--cyan-glow); font-weight: 700;">6 名</span></div>
-                                <div>• 具疲勞評估資料: <span style="color: var(--cyan-glow); font-weight: 700;">2 名測試者</span></div>
-                                <div>• 真實步態資料: <span style="color: var(--cyan-glow); font-weight: 700;">逾 20 小時</span></div>
-                                <div>• 數據採樣率: <span style="color: var(--cyan-glow); font-weight: 700;">160 Hz</span></div>
-                                <div>• 窗口切片長: <span style="color: var(--cyan-glow); font-weight: 700;">960 據點</span></div>
-                                <div>• 源域 5 折平均 Accuracy: <span style="color: var(--cyan-glow); font-weight: 700;">97.63%</span></div>
-                                <div>• 跨使用者完整校準 Accuracy: <span style="color: var(--cyan-glow); font-weight: 700;">93.40%</span></div>
-                                <div>• 源域 5 折平均 Macro F1: <span style="color: var(--cyan-glow); font-weight: 700;">96.77%</span></div>
-                                <div>• 跨使用者校準 Macro F1: <span style="color: var(--cyan-glow); font-weight: 700;">89.50%</span></div>
-                            </div>
-                            <div style="margin-top: 15px; padding-top: 13px; border-top: 1px solid rgba(255,255,255,0.08); color: #858095; font-size: 0.76rem; line-height: 1.6;">
-                                資料限制：6 名跨主體測試者中，4 名於測試期間未呈現明確疲勞狀態；因此，具備疲勞類別辨識參考價值的測試資料主要來自其餘 2 名。
                             </div>
                         </div>
                     </div>
